@@ -1,0 +1,338 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>DSL-Déménagements — Spécification fonctionnelle & technique</title><meta name="author" content="DSL-Déménagements"><style>
+@page{size:A4} *{box-sizing:border-box} html,body{margin:0;padding:0}
+body{font-family:"Nimbus Sans","DejaVu Sans",Arial,sans-serif;font-size:9.4pt;line-height:1.5;color:#1d2939;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+p{margin:0 0 7pt} strong{color:#0b1b33} a{color:#0d6b86;text-decoration:none} em{color:#334155}
+.mono{font-family:"DejaVu Sans Mono",monospace;font-size:8pt} .muted{color:#64748b} .small{font-size:8.2pt;line-height:1.45}
+.cover{page-break-after:always;position:relative;overflow:hidden;background:linear-gradient(155deg,#0a1628 0%,#0f2340 48%,#152d4a 100%);color:#eaf2fb;border-radius:5px;padding:30px 32px 24px;height:258mm}
+.cover::before{content:"";position:absolute;top:-160px;right:-150px;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.32),transparent 63%)}
+.cover::after{content:"";position:absolute;bottom:-190px;left:-140px;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle,rgba(22,163,74,.20),transparent 63%)}
+.cover-top{display:flex;align-items:center;gap:11px;position:relative;z-index:2}
+.mark{width:40px;height:40px;border-radius:11px;text-align:center;line-height:40px;font-weight:800;font-size:19pt;color:#0a1628;background:linear-gradient(135deg,#60a5fa,#2563eb 52%,#16a34a 135%)}
+.brand-name{font-size:12pt;font-weight:800;letter-spacing:.18em} .brand-sub{font-size:6.6pt;letter-spacing:.32em;color:#93a8c8;text-transform:uppercase;margin-top:2px}
+.cover-mid{position:relative;z-index:2;margin-top:46px}
+.cover-kicker{display:inline-block;border:1px solid rgba(37,99,235,.3);background:rgba(37,99,235,.07);color:#93c5fd;font-size:7pt;letter-spacing:.22em;text-transform:uppercase;padding:5px 10px;border-radius:999px;margin-bottom:18px}
+.cover h1{font-family:"C059","DejaVu Serif",Georgia,serif;font-size:31pt;line-height:1.12;font-weight:bold;margin:0 0 14px;letter-spacing:-.01em}
+.cover h1 span{color:#60a5fa} .cover .sub{font-size:12pt;color:#c9d8ec;line-height:1.45;max-width:132mm;margin-bottom:8px}
+.cover .sub2{font-size:9pt;color:#93a8c8;max-width:136mm}
+.cover-rule{height:1px;background:linear-gradient(90deg,rgba(37,99,235,.7),rgba(255,255,255,.05));margin:26px 0 20px;position:relative;z-index:2}
+.cover-meta{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;max-width:148mm}
+.cover-meta .k{font-size:6.8pt;letter-spacing:.2em;text-transform:uppercase;color:#7a90b0;margin-bottom:2px}
+.cover-meta .v{font-size:9.4pt;color:#eaf2fb}
+.cover-bottom{position:absolute;left:32px;right:32px;bottom:22px;z-index:2;border-top:1px solid rgba(255,255,255,.1);padding-top:12px;display:flex;justify-content:space-between;font-size:7.4pt;color:#7a90b0}
+.cover-bottom strong{color:#eaf2fb}
+h2.sec{page-break-before:always;font-family:"C059","DejaVu Serif",Georgia,serif;font-size:19pt;line-height:1.2;color:#0b1b33;margin:0 0 4px;font-weight:bold}
+.sec-kicker{font-size:7pt;letter-spacing:.24em;text-transform:uppercase;color:#1d4ed8;font-weight:bold;margin-bottom:4px}
+.sec-head{border-bottom:2px solid #e3eaf3;padding-bottom:10px;margin-bottom:16px}
+.sec-head .abstract{font-size:9.6pt;color:#55657a;margin-top:7px;max-width:165mm}
+h3{font-size:11.6pt;color:#0b1b33;margin:16px 0 6px;font-weight:bold;break-after:avoid}
+h4{font-size:9.6pt;color:#12304f;margin:11px 0 4px;font-weight:bold;letter-spacing:.01em;break-after:avoid}
+h3 .n,h4 .n{color:#1d4ed8;margin-right:5px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 12px;break-inside:avoid}
+.kpi{border:1px solid #e0e7f0;border-radius:4px;padding:9px 10px;background:#f8fafc;break-inside:avoid}
+.kpi .n{font-family:"C059",Georgia,serif;font-size:16pt;font-weight:bold;color:#0b1b33;line-height:1.1}
+.kpi .l{font-size:7.4pt;color:#64748b;margin-top:2px;line-height:1.3}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{border:1px solid #e0e7f0;border-radius:4px;padding:10px 12px;background:#fff;break-inside:avoid}
+.card h4{margin-top:0} .card p:last-child{margin-bottom:0}
+.callout,.warn,.ok{border-left:3px solid #1d4ed8;background:#eff6ff;padding:9px 12px;font-size:8.8pt;color:#334155;margin:10px 0;break-inside:avoid}
+.warn{border-color:#c2740a;background:#fdf7ec} .ok{border-color:#178a63;background:#f0faf6}
+.callout .t,.warn .t,.ok .t{display:block;font-size:7pt;letter-spacing:.18em;text-transform:uppercase;margin-bottom:3px;color:#1d4ed8}
+.warn .t{color:#a35f08} .ok .t{color:#137a58}
+table.tbl{width:100%;border-collapse:collapse;font-size:8.3pt;margin:8px 0 12px}
+table.tbl th{background:#1e3a8a;color:#eaf2fb;text-align:left;font-size:7.2pt;letter-spacing:.09em;text-transform:uppercase;padding:6px 7px;font-weight:bold}
+table.tbl td{border-bottom:1px solid #e3eaf3;padding:5.5px 7px;vertical-align:top;color:#334155}
+table.tbl tr:nth-child(even) td{background:#f8fafc} table.tbl td strong{color:#0b1b33}
+table.tbl .mono{font-size:7.4pt} table.tbl.compact td,table.tbl.compact th{padding:4px 6px}
+table.tbl thead{display:table-header-group} table.tbl tr{break-inside:avoid}
+.mod-head{border:1px solid #e0e7f0;border-left:4px solid #1d4ed8;border-radius:3px;padding:10px 13px;background:linear-gradient(100deg,#eff6ff,#ffffff 70%);margin:12px 0 10px;break-inside:avoid;break-after:avoid}
+.mod-head .id{font-family:"DejaVu Sans Mono",monospace;font-size:7pt;letter-spacing:.18em;color:#1d4ed8}
+.mod-head h3{margin:2px 0 2px;font-family:"C059",Georgia,serif;font-size:15pt}
+.mod-head .tagline{font-size:8.6pt;color:#64748b;font-style:italic}
+.tags{margin:5px 0 0} .tag{display:inline-block;font-size:6.6pt;letter-spacing:.07em;text-transform:uppercase;border:1px solid #e0e7f0;border-radius:3px;padding:1.5px 5px;margin:0 2px 2px 0;color:#4b5f77;background:#fff}
+.tag.cy{border-color:#93c5fd;background:#eff6ff;color:#1d4ed8} .tag.em{border-color:#a7f3d0;background:#ecfdf5;color:#065f46} .tag.am{border-color:#fde68a;background:#fefce8;color:#92400e}
+ul.ticks,ul.cross{list-style:none;padding:0;margin:4px 0 8px} ul.ticks li,ul.cross li{position:relative;padding-left:13px;margin-bottom:3.2px;font-size:8.7pt;color:#334155}
+ul.ticks li::before{content:"▪";position:absolute;left:0;top:-1px;color:#1d4ed8;font-size:9pt}
+ul.cross li::before{content:"×";position:absolute;left:0;top:-1px;color:#b4495f;font-weight:bold}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px} .duo h4{margin-top:2px}
+.verdict{font-size:8.2pt;color:#475569;border-top:1px dashed #dbe4f0;padding-top:6px;margin-top:6px}
+.toc{margin-top:6px} .toc-row{display:grid;grid-template-columns:12mm 1fr auto;gap:4px;padding:4.2px 0;border-bottom:1px dotted #dbe4f0;font-size:9pt}
+.toc-row .num{font-family:"DejaVu Sans Mono",monospace;color:#1d4ed8;font-size:8pt}
+.toc-row .sub{color:#64748b;font-size:7.6pt;display:block;margin-top:1px}
+.toc-row .flag{font-size:7pt;color:#94a3b8} .toc-part{margin:12px 0 3px;font-size:7pt;letter-spacing:.22em;text-transform:uppercase;color:#94a3b8}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 12px;break-inside:avoid}
+.step{border:1px solid #e0e7f0;border-radius:3px;padding:7px 8px;background:#f8fafc;break-inside:avoid}
+.step .n{font-family:"DejaVu Sans Mono",monospace;font-size:6.8pt;color:#1d4ed8;letter-spacing:.1em}
+.step .t{font-size:8pt;font-weight:bold;color:#0b1b33;margin:2px 0} .step .d{font-size:7.2pt;color:#64748b;line-height:1.35}
+.diagram{border:1px solid #e0e7f0;border-radius:4px;padding:10px 12px;background:#f8fafc;margin:8px 0 12px;break-inside:avoid}
+.layer{display:grid;grid-template-columns:26mm 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed #dbe4f0;align-items:start}
+.layer:last-child{border-bottom:none} .layer .k{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;color:#7c8ca1;padding-top:3px}
+.layer .v{font-size:8.2pt;color:#334155}
+.pill{display:inline-block;border:1px solid #e0e7f0;background:#fff;border-radius:3px;padding:1.5px 5px;margin:0 2px 2px 0;font-size:7.2pt}
+.pill.hi{border-color:#93c5fd;background:#eff6ff;color:#1d4ed8}
+.note{font-size:7.6pt;color:#7c8ca1} .pagebreak{page-break-before:always}
+.kv{display:grid;grid-template-columns:44mm 1fr;gap:2px 8px;font-size:8.6pt} .kv .k{color:#64748b} .kv .v{color:#0b1b33}
+.sig{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:24px;font-size:8pt;color:#64748b}
+.sig .line{border-top:1px solid #94a3b8;padding-top:4px;margin-top:24px}
+.code{font-family:"DejaVu Sans Mono",monospace;font-size:7.4pt;background:#0a1628;color:#eaf2fb;padding:9px 11px;border-radius:3px;white-space:pre-wrap;line-height:1.45;margin:7px 0 10px}
+.code .c{color:#93a8c8} .chk{list-style:none;padding:0;margin:4px 0} .chk li{position:relative;padding-left:16px;margin-bottom:3px;font-size:8.5pt}
+.chk li::before{content:"☐";position:absolute;left:0;top:-1px;color:#1d4ed8}
+</style></head><body>
+
+<div class="cover">
+  <div class="cover-top"><div class="mark">D</div><div><div class="brand-name">DSL-DÉMÉNAGEMENTS</div><div class="brand-sub">Marketplace Logistique</div></div></div>
+  <div class="cover-mid">
+    <div class="cover-kicker">Spécification produit · Édition 2026</div>
+    <h1>Marketplace de transport<br/><span>&amp; déménagement</span></h1>
+    <p class="sub">Spécification fonctionnelle et technique complète — mise en relation expéditeurs et transporteurs, enchères, suivi, évaluations.</p>
+    <p class="sub2">Document de référence pour la démonstration et l'intégration du produit.</p>
+  </div>
+  <div class="cover-rule"></div>
+  <div class="cover-meta">
+    <div><div class="k">Version</div><div class="v">1.0 — finale</div></div>
+    <div><div class="k">Date</div><div class="v">5 novembre 2026</div></div>
+    <div><div class="k">Application</div><div class="v">https://blueviolet-fox-642747.hostingersite.com</div></div>
+    <div><div class="k">Périmètre</div><div class="v">Marketplace B2B/B2C de transport et déménagement</div></div>
+    <div><div class="k">Stack</div><div class="v">React 18 · TypeScript · Express · PostgreSQL · Drizzle</div></div>
+    <div><div class="k">Diffusion</div><div class="v">Interne · direction, produit, développement</div></div>
+  </div>
+  <div class="cover-bottom"><div><strong>blueviolet-fox-642747.hostingersite.com</strong> — document généré à partir du dossier produit</div><div>2 rôles · 5 tables · 6 statuts</div></div>
+</div>
+
+<h2 class="sec" style="page-break-before:avoid">Sommaire</h2>
+<div class="sec-head"><div class="abstract">Quinze chapitres couvrant la vision, les fonctionnalités, le modèle de données, l'architecture et l'intégration vidéo.</div></div>
+<div class="toc">
+  <div class="toc-part">Comprendre le produit</div>
+  <div class="toc-row"><span class="num">01</span><span>Résumé exécutif</span><span class="flag">Stratégie</span></div>
+  <div class="toc-row"><span class="num">02</span><span>Contexte et problème métier</span><span class="flag">Stratégie</span></div>
+  <div class="toc-row"><span class="num">03</span><span>Utilisateurs et rôles (expéditeur / transporteur)</span><span class="flag">Produit</span></div>
+  <div class="toc-row"><span class="num">04</span><span>Cartographie fonctionnelle</span><span class="flag">Produit</span></div>
+  <div class="toc-part">Spécification fonctionnelle</div>
+  <div class="toc-row"><span class="num">05</span><span>Analyse module par module</span><span class="flag">Cœur</span></div>
+  <div class="toc-row"><span class="num">06</span><span>Parcours utilisateurs</span><span class="flag">Cœur</span></div>
+  <div class="toc-row"><span class="num">07</span><span>Modèle de données (5 tables)</span><span class="flag">Cœur</span></div>
+  <div class="toc-part">Spécification technique</div>
+  <div class="toc-row"><span class="num">08</span><span>Architecture technique</span><span class="flag">Technique</span></div>
+  <div class="toc-row"><span class="num">09</span><span>Design system</span><span class="flag">Design</span></div>
+  <div class="toc-row"><span class="num">10</span><span>Sécurité et conformité</span><span class="flag">Risque</span></div>
+  <div class="toc-part">Décider et exploiter</div>
+  <div class="toc-row"><span class="num">11</span><span>Audit de maturité</span><span class="flag">Audit</span></div>
+  <div class="toc-row"><span class="num">12</span><span>Feuille de route</span><span class="flag">Plan</span></div>
+  <div class="toc-row"><span class="num">13</span><span>Exploitation et déploiement</span><span class="flag">Ops</span></div>
+  <div class="toc-row"><span class="num">14</span><span>Guide d'intégration vidéo</span><span class="flag">Production</span></div>
+  <div class="toc-row"><span class="num">15</span><span>Annexes</span><span class="flag">Référence</span></div>
+</div>
+
+<h2 class="sec">01 · Résumé exécutif</h2>
+<div class="sec-head"><div class="abstract">Easy-Déménagement est une marketplace logistique connectant expéditeurs et transporteurs professionnels.</div></div>
+<h3><span class="n">1.1</span>Fiche d'identité</h3>
+<table class="tbl"><tbody>
+<tr><td style="width:34%"><strong>Nom</strong></td><td>DSL-Déménagements — Easy-Déménagement</td></tr>
+<tr><td><strong>Nature</strong></td><td>Marketplace web full-stack</td></tr>
+<tr><td><strong>Métier</strong></td><td>Mise en relation expéditeurs / transporteurs, enchères, suivi, évaluations</td></tr>
+<tr><td><strong>Marché</strong></td><td>Particuliers et professionnels (déménagement, transport de marchandises)</td></tr>
+<tr><td><strong>Stack</strong></td><td>React 18 · TypeScript · Tailwind · Express · PostgreSQL · Drizzle ORM</td></tr>
+<tr><td><strong>Rôles</strong></td><td>Expéditeur · Transporteur</td></tr>
+<tr><td><strong>Types de cargaison</strong></td><td>4 (déménagement, électroménager, matériaux, commercial)</td></tr>
+<tr><td><strong>Types de véhicules</strong></td><td>4 (fourgon, petit camion, camion benne, porte-engins)</td></tr>
+<tr><td><strong>Application</strong></td><td>https://blueviolet-fox-642747.hostingersite.com</td></tr>
+<tr><td><strong>État</strong></td><td>Démonstrateur avancé, prêt pour la démonstration</td></tr>
+</tbody></table>
+<h3><span class="n">1.2</span>Ce que le produit fait</h3>
+<div class="grid2">
+<div class="card"><h4 style="color:#127a58">Livré</h4><ul class="ticks">
+<li>Authentification par rôles (expéditeur / transporteur).</li>
+<li>Formulaire de commande en 3 étapes avec validation Zod.</li>
+<li>Système d'enchères (offres concurrentielles).</li>
+<li>Suivi simulé sur carte interactive.</li>
+<li>Gestion de flotte véhicules.</li>
+<li>Système d'évaluation (1-5 étoiles + commentaire).</li>
+<li>Tableau de bord expéditeur et transporteur.</li>
+<li>6 statuts de commande trackés.</li>
+</ul></div>
+<div class="card"><h4 style="color:#a83a55">Hors périmètre</h4><ul class="cross">
+<li>Paiement en ligne et commission.</li>
+<li>Géolocalisation réelle (GPS).</li>
+<li>Signature électronique.</li>
+<li>Facturation et comptabilité.</li>
+<li>Application mobile native.</li>
+<li>Multi-langue.</li>
+</ul></div>
+</div>
+
+<h2 class="sec">02 · Contexte et problème métier</h2>
+<div class="sec-head"><div class="abstract">Trouver un transporteur fiable et au juste prix est difficile pour les particuliers et professionnels.</div></div>
+<p>Un expéditeur (particulier qui déménage ou professionnel qui expédie des marchandises) cherche un transporteur disponible, fiable et au bon prix. Un transporteur cherche du fret pour remplir ses véhicules. La mise en relation se fait souvent par téléphone, sans transparence sur les prix ni sur la réputation.</p>
+<h3><span class="n">2.1</span>Cinq douleurs, cinq réponses</h3>
+<table class="tbl"><thead><tr><th>Douleur</th><th>Conséquence</th><th>Réponse DSL</th></tr></thead><tbody>
+<tr><td><strong>Pas de visibilité sur les prix</strong></td><td>Surfacturation, méfiance</td><td>Enchères concurrentielles, prix suggéré</td></tr>
+<tr><td><strong>Transporteurs inconnus</strong></td><td>Risque, mauvaise expérience</td><td>Profils, évaluations, réputation</td></tr>
+<tr><td><strong>Pas de suivi</strong></td><td>Anxiété, appels répétés</td><td>Suivi simulé sur carte, statuts clairs</td></tr>
+<tr><td><strong>Recherche manuelle</strong></td><td>Perte de temps</td><td>Marketplace avec filtres par ville</td></tr>
+<tr><td><strong>Pas de traçabilité</strong></td><td>Litiges, pas de preuve</td><td>Historique complet, évaluations mutuelles</td></tr>
+</tbody></table>
+
+<h2 class="sec">03 · Utilisateurs et rôles</h2>
+<div class="sec-head"><div class="abstract">Deux rôles, une même plateforme, interface adaptée.</div></div>
+<table class="tbl"><thead><tr><th>Rôle</th><th>Objectif</th><th>Accès</th></tr></thead><tbody>
+<tr><td><strong>Expéditeur</strong></td><td>Transporter des biens</td><td>Créer des demandes, recevoir des offres, suivre, évaluer</td></tr>
+<tr><td><strong>Transporteur</strong></td><td>Trouver du fret</td><td>Parcourir les commandes, enchérir, gérer la flotte, être évalué</td></tr>
+</tbody></table>
+
+<h2 class="sec">04 · Cartographie fonctionnelle</h2>
+<div class="sec-head"><div class="abstract">Modules et cycle de vie d'une commande.</div></div>
+<table class="tbl"><thead><tr><th>#</th><th>Module</th><th>Maturité</th></tr></thead><tbody>
+<tr><td>01</td><td><strong>Authentification &amp; rôles</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>02</td><td><strong>Création de commande (3 étapes)</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>03</td><td><strong>Enchères (bidding)</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>04</td><td><strong>Suivi sur carte</strong></td><td><span class="tag am">Simulé</span></td></tr>
+<tr><td>05</td><td><strong>Gestion de flotte</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>06</td><td><strong>Évaluations</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>07</td><td><strong>Tableau de bord expéditeur</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>08</td><td><strong>Tableau de bord transporteur</strong></td><td><span class="tag em">Complet</span></td></tr>
+</tbody></table>
+<h3><span class="n">4.1</span>Cycle de vie d'une commande</h3>
+<div class="flow">
+<div class="step"><div class="n">STATUT 1</div><div class="t">pending</div><div class="d">Demande créée par l'expéditeur.</div></div>
+<div class="step"><div class="n">STATUT 2</div><div class="t">bidding</div><div class="d">Offres reçues des transporteurs.</div></div>
+<div class="step"><div class="n">STATUT 3</div><div class="t">assigned</div><div class="d">Offre acceptée, transporteur assigné.</div></div>
+<div class="step"><div class="n">STATUT 4</div><div class="t">in_transit</div><div class="d">En cours de livraison.</div></div>
+<div class="step"><div class="n">STATUT 5</div><div class="t">completed</div><div class="d">Livraison effectuée.</div></div>
+<div class="step"><div class="n">STATUT 6</div><div class="t">cancelled</div><div class="d">Annulation possible à tout moment.</div></div>
+</div>
+
+<h2 class="sec">05 · Analyse module par module</h2>
+<div class="sec-head"><div class="abstract">Huit modules : objectif, fonctions, données, limites.</div></div>
+
+<div class="mod-head"><div class="id">MODULE 01</div><h3>Authentification &amp; rôles</h3><div class="tagline">Sécuriser l'accès à la plateforme</div><div class="tags"><span class="tag cy">Auth</span><span class="tag">Cookies</span><span class="tag em">Complet</span></div></div>
+<p>Inscription et connexion sécurisées par cookies de session. Chaque utilisateur choisit son rôle (expéditeur ou transporteur) à la création du compte.</p>
+
+<div class="mod-head"><div class="id">MODULE 02</div><h3>Création de commande (3 étapes)</h3><div class="tagline">Déposer une demande en 3 minutes</div><div class="tags"><span class="tag">Stepper</span><span class="tag">Zod</span><span class="tag em">Complet</span></div></div>
+<p>Interface guidée avec stepper : trajet (adresses), marchandise (type + poids + volume), détails finaux (date, heure, prix suggéré). Validation Zod à chaque étape.</p>
+<div class="duo"><div><h4>Étape 1 — Trajet</h4><ul class="ticks"><li>Adresse complète de départ.</li><li>Adresse complète d'arrivée.</li><li>Validation en temps réel.</li></ul></div>
+<div><h4>Étape 2 — Marchandise</h4><ul class="ticks"><li>Type de cargaison (4 choix).</li><li>Description détaillée.</li><li>Poids estimé (kg), volume (m³).</li></ul></div></div>
+<div class="duo"><div><h4>Étape 3 — Détails &amp; prix</h4><ul class="ticks"><li>Date et heure de collecte.</li><li>Prix suggéré (€).</li><li>Soumission sécurisée.</li></ul></div>
+<div><h4>Types de cargaison</h4><ul class="ticks"><li>Déménagement complet.</li><li>Électroménager.</li><li>Matériaux de construction.</li><li>Transport commercial.</li></ul></div></div>
+
+<div class="mod-head"><div class="id">MODULE 03</div><h3>Système d'enchères (bidding)</h3><div class="tagline">Le meilleur prix par la concurrence</div><div class="tags"><span class="tag cy">Enchères</span><span class="tag">Offres</span><span class="tag em">Complet</span></div></div>
+<p>Les transporteurs soumettent des offres concurrentielles avec prix, véhicule et message. L'expéditeur accepte ou rejette chaque offre. Statuts d'offre : pending, accepted, rejected.</p>
+
+<div class="mod-head"><div class="id">MODULE 04</div><h3>Suivi sur carte</h3><div class="tagline">Où est mon transport ?</div><div class="tags"><span class="tag am">Simulé</span><span class="tag">Carte</span></div></div>
+<p>Visualisation interactive de la progression de livraison sur carte. Simulation temps réel du déplacement du camion de l'adresse de départ à l'adresse d'arrivée.</p>
+<div class="warn"><span class="t">Limite</span>Le suivi est simulé (pas de GPS réel). La géolocalisation réelle est hors périmètre de cette version.</div>
+
+<div class="mod-head"><div class="id">MODULE 05</div><h3>Gestion de flotte</h3><div class="tagline">Les véhicules du transporteur</div><div class="tags"><span class="tag">CRUD</span><span class="tag">Véhicules</span><span class="tag em">Complet</span></div></div>
+<p>Les transporteurs enregistrent leurs véhicules (type, marque, modèle, immatriculation, capacité). Sélection du véhicule lors de chaque soumission d'offre. 4 types : fourgon, petit camion, camion benne, porte-engins.</p>
+
+<div class="mod-head"><div class="id">MODULE 06</div><h3>Évaluations</h3><div class="tagline">Construire la réputation</div><div class="tags"><span class="tag">Rating</span><span class="tag em">Complet</span></div></div>
+<p>Après chaque livraison, les deux parties se notent mutuellement (1-5 étoiles + commentaire). Construit la réputation des transporteurs sur la plateforme.</p>
+
+<div class="mod-head"><div class="id">MODULE 07</div><h3>Tableau de bord expéditeur</h3><div class="tagline">Mes commandes en un coup d'œil</div><div class="tags"><span class="tag">Dashboard</span><span class="tag em">Complet</span></div></div>
+<p>Vue complète des commandes créées avec leur statut, les offres reçues, le transporteur assigné et l'accès aux détails de chaque expédition.</p>
+
+<div class="mod-head"><div class="id">MODULE 08</div><h3>Tableau de bord transporteur</h3><div class="tagline">Trouver du fret, gérer la flotte</div><div class="tags"><span class="tag">Dashboard</span><span class="tag em">Complet</span></div></div>
+<p>Deux onglets : « Trouver du fret » (commandes en attente avec recherche par ville) et « Ma Flotte » (gestion des véhicules enregistrés). Ajout de véhicule en popup.</p>
+
+<h2 class="sec">06 · Parcours utilisateurs</h2>
+<div class="sec-head"><div class="abstract">Deux parcours : expéditeur et transporteur.</div></div>
+<h3><span class="n">6.1</span>Expéditeur — créer une demande</h3>
+<div class="flow">
+<div class="step"><div class="n">ÉTAPE 1</div><div class="t">Trajet</div><div class="d">Adresses départ/arrivée.</div></div>
+<div class="step"><div class="n">ÉTAPE 2</div><div class="t">Marchandise</div><div class="d">Type, description, poids, volume.</div></div>
+<div class="step"><div class="n">ÉTAPE 3</div><div class="t">Détails</div><div class="d">Date, heure, prix suggéré.</div></div>
+<div class="step"><div class="n">ÉTAPE 4</div><div class="t">Publication</div><div class="d">Demande visible par les transporteurs.</div></div>
+</div>
+<h3><span class="n">6.2</span>Transporteur — enchérir et livrer</h3>
+<p>Le transporteur parcourt les commandes, filtre par ville, soumet une offre (prix, véhicule, message). L'expéditeur accepte. Le transporteur met à jour le statut jusqu'à la livraison, puis évaluation mutuelle.</p>
+
+<h2 class="sec">07 · Modèle de données</h2>
+<div class="sec-head"><div class="abstract">Cinq tables relationnelles, Drizzle ORM, PostgreSQL.</div></div>
+<table class="tbl"><thead><tr><th>Table</th><th>Champs principaux</th><th>Contraintes</th></tr></thead><tbody>
+<tr><td><strong>users</strong></td><td class="mono">id, email, firstName, lastName, phone, userType, passwordHash, createdAt</td><td>email unique, userType shipper/carrier</td></tr>
+<tr><td><strong>vehicles</strong></td><td class="mono">id, carrierId, vehicleType, brand, model, licensePlate, capacityKg, capacityM3, isActive</td><td>FK users, licensePlate unique</td></tr>
+<tr><td><strong>orders</strong></td><td class="mono">id, shipperId, carrierId, pickupAddress, deliveryAddress, cargoType, description, weightKg, volumeM3, suggestedPrice, status, pickupDate</td><td>6 statuts, FK users</td></tr>
+<tr><td><strong>bids</strong></td><td class="mono">id, orderId, carrierId, vehicleId, proposedPrice, message, status</td><td>FK orders/users/vehicles, statut pending/accepted/rejected</td></tr>
+<tr><td><strong>reviews</strong></td><td class="mono">id, orderId, reviewerId, revieweeId, rating, comment, createdAt</td><td>rating 1-5, FK orders/users</td></tr>
+</tbody></table>
+
+<h2 class="sec">08 · Architecture technique</h2>
+<div class="sec-head"><div class="abstract">Full-stack TypeScript, séparation claire, déployé sur Hostinger.</div></div>
+<div class="diagram">
+<div class="layer"><div class="k">Frontend</div><div class="v"><span class="pill hi">React 18</span><span class="pill">TypeScript</span><span class="pill">Tailwind CSS</span><span class="pill">Radix UI</span><span class="pill">Framer Motion</span><span class="pill">Wouter</span><span class="pill">TanStack Query</span></div></div>
+<div class="layer"><div class="k">Backend</div><div class="v"><span class="pill wa">Express.js</span><span class="pill">Node.js</span><span class="pill">API REST</span><span class="pill">Zod validation</span></div></div>
+<div class="layer"><div class="k">Données</div><div class="v"><span class="pill">PostgreSQL</span><span class="pill">Drizzle ORM</span></div></div>
+<div class="layer"><div class="k">Auth</div><div class="v"><span class="pill">Cookies de session</span><span class="pill">Rôles</span></div></div>
+<div class="layer"><div class="k">Déploiement</div><div class="v"><span class="pill hi">Hostinger Node.js</span></div></div>
+</div>
+
+<h2 class="sec">09 · Design system</h2>
+<div class="sec-head"><div class="abstract">Thème clair bleu/vert, typographie système, responsive.</div></div>
+<p>Palette bleue (#2563eb) et verte (#16a34a) sur fond blanc. Typographie système (Segoe UI / Roboto). Composants : cartes, badges, stepper. 100 % responsive mobile/tablette/desktop.</p>
+
+<h2 class="sec">10 · Sécurité et conformité</h2>
+<div class="sec-head"><div class="abstract">Authentification par rôle, validation Zod, sessions.</div></div>
+<ul class="ticks">
+<li>Authentification par email + mot de passe hashé.</li>
+<li>Deux rôles avec accès différencié.</li>
+<li>Validation Zod côté client et serveur.</li>
+<li>Sessions via cookies sécurisés.</li>
+<li>Contraintes d'intégrité en base (FK, unique).</li>
+</ul>
+<div class="warn"><span class="t">Vigilance</span>Pas de paiement en ligne dans cette version — les transactions sont hors plateforme. Aucune politique de conservation des données (RGPD) n'est formalisée.</div>
+
+<h2 class="sec">11 · Audit de maturité</h2>
+<div class="sec-head"><div class="abstract">Huit modules, tous fonctionnels.</div></div>
+<table class="tbl"><thead><tr><th>Module</th><th>Note</th><th>État</th></tr></thead><tbody>
+<tr><td>Authentification &amp; rôles</td><td><strong>4/5</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>Création de commande</td><td><strong>4.5/5</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>Enchères</td><td><strong>4.5/5</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>Suivi sur carte</td><td><strong>3/5</strong></td><td><span class="tag am">Simulé</span></td></tr>
+<tr><td>Gestion de flotte</td><td><strong>4/5</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>Évaluations</td><td><strong>4/5</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>Tableau de bord expéditeur</td><td><strong>4/5</strong></td><td><span class="tag em">Complet</span></td></tr>
+<tr><td>Tableau de bord transporteur</td><td><strong>4/5</strong></td><td><span class="tag em">Complet</span></td></tr>
+</tbody></table>
+<div class="kpis" style="grid-template-columns:repeat(4,1fr)">
+<div class="kpi"><div class="n">4.0<span style="font-size:9pt">/5</span></div><div class="l">maturité moyenne</div></div>
+<div class="kpi"><div class="n">7<span style="font-size:9pt">/8</span></div><div class="l">modules complets</div></div>
+<div class="kpi"><div class="n">2</div><div class="l">rôles utilisateurs</div></div>
+<div class="kpi"><div class="n">5</div><div class="l">tables PostgreSQL</div></div>
+</div>
+
+<h2 class="sec">12 · Feuille de route</h2>
+<div class="sec-head"><div class="abstract">Évolutions pour passer à l'échelle.</div></div>
+<table class="tbl compact"><thead><tr><th>Phase</th><th>Livrables</th></tr></thead><tbody>
+<tr><td><strong>Phase 1</strong></td><td>Paiement en ligne, commission plateforme, géolocalisation réelle (GPS).</td></tr>
+<tr><td><strong>Phase 2</strong></td><td>Application mobile native, facturation, multi-langue.</td></tr>
+<tr><td><strong>Phase 3</strong></td><td>Assurance transport, API partenaires, analytics avancés.</td></tr>
+</tbody></table>
+
+<h2 class="sec">13 · Exploitation et déploiement</h2>
+<div class="sec-head"><div class="abstract">Hébergement Node.js sur Hostinger, HTTPS actif.</div></div>
+<table class="tbl compact"><tbody>
+<tr><td style="width:30%"><strong>Domaine</strong></td><td>blueviolet-fox-642747.hostingersite.com</td></tr>
+<tr><td><strong>Type</strong></td><td>Node.js (React + Express + PostgreSQL)</td></tr>
+<tr><td><strong>Base de données</strong></td><td>PostgreSQL (Hostinger)</td></tr>
+<tr><td><strong>HTTPS</strong></td><td>Actif</td></tr>
+<tr><td><strong>Code source</strong></td><td>github.com/solver492/demenagement</td></tr>
+</tbody></table>
+
+<h2 class="sec">14 · Guide d'intégration vidéo</h2>
+<div class="sec-head"><div class="abstract">Vidéo de présentation déjà intégrée dans la page descriptive.</div></div>
+<p>La page descriptive contient une vidéo de présentation complète. Pour remplacer, modifier l'URL dans l'iframe de la section « Présentation vidéo ».</p>
+
+<h2 class="sec">15 · Annexes</h2>
+<div class="sec-head"><div class="abstract">Glossaire et traçabilité.</div></div>
+<h3><span class="n">15.1</span>Glossaire</h3>
+<table class="tbl compact"><tbody>
+<tr><td><strong>Expéditeur</strong></td><td>Particulier ou professionnel qui a besoin de transporter des biens.</td></tr>
+<tr><td><strong>Transporteur</strong></td><td>Professionnel du transport qui recherche du fret.</td></tr>
+<tr><td><strong>Enchère (bid)</strong></td><td>Offre d'un transporteur avec prix, véhicule et message.</td></tr>
+<tr><td><strong>Cargaison</strong></td><td>Marchandise à transporter (4 types).</td></tr>
+<tr><td><strong>Statut</strong></td><td>État d'une commande (6 statuts).</td></tr>
+</tbody></table>
+<div style="margin-top:26px;border-top:2px solid #e3eaf3;padding-top:14px" class="small muted">
+<strong style="color:#0b1b33">DSL-Déménagements — Spécification fonctionnelle et technique · v1.0 · 5 novembre 2026.</strong><br/>
+Application : https://blueviolet-fox-642747.hostingersite.com · Code : github.com/solver492/demenagement<br/>
+Document établi à partir du dossier produit et de l'application déployée.
+</div>
+</body></html>
