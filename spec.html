@@ -1,338 +1,1263 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>DSL-Déménagements — Spécification fonctionnelle & technique</title><meta name="author" content="DSL-Déménagements"><style>
-@page{size:A4} *{box-sizing:border-box} html,body{margin:0;padding:0}
-body{font-family:"Nimbus Sans","DejaVu Sans",Arial,sans-serif;font-size:9.4pt;line-height:1.5;color:#1d2939;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-p{margin:0 0 7pt} strong{color:#0b1b33} a{color:#0d6b86;text-decoration:none} em{color:#334155}
-.mono{font-family:"DejaVu Sans Mono",monospace;font-size:8pt} .muted{color:#64748b} .small{font-size:8.2pt;line-height:1.45}
-.cover{page-break-after:always;position:relative;overflow:hidden;background:linear-gradient(155deg,#0a1628 0%,#0f2340 48%,#152d4a 100%);color:#eaf2fb;border-radius:5px;padding:30px 32px 24px;height:258mm}
-.cover::before{content:"";position:absolute;top:-160px;right:-150px;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.32),transparent 63%)}
-.cover::after{content:"";position:absolute;bottom:-190px;left:-140px;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle,rgba(22,163,74,.20),transparent 63%)}
-.cover-top{display:flex;align-items:center;gap:11px;position:relative;z-index:2}
-.mark{width:40px;height:40px;border-radius:11px;text-align:center;line-height:40px;font-weight:800;font-size:19pt;color:#0a1628;background:linear-gradient(135deg,#60a5fa,#2563eb 52%,#16a34a 135%)}
-.brand-name{font-size:12pt;font-weight:800;letter-spacing:.18em} .brand-sub{font-size:6.6pt;letter-spacing:.32em;color:#93a8c8;text-transform:uppercase;margin-top:2px}
-.cover-mid{position:relative;z-index:2;margin-top:46px}
-.cover-kicker{display:inline-block;border:1px solid rgba(37,99,235,.3);background:rgba(37,99,235,.07);color:#93c5fd;font-size:7pt;letter-spacing:.22em;text-transform:uppercase;padding:5px 10px;border-radius:999px;margin-bottom:18px}
-.cover h1{font-family:"C059","DejaVu Serif",Georgia,serif;font-size:31pt;line-height:1.12;font-weight:bold;margin:0 0 14px;letter-spacing:-.01em}
-.cover h1 span{color:#60a5fa} .cover .sub{font-size:12pt;color:#c9d8ec;line-height:1.45;max-width:132mm;margin-bottom:8px}
-.cover .sub2{font-size:9pt;color:#93a8c8;max-width:136mm}
-.cover-rule{height:1px;background:linear-gradient(90deg,rgba(37,99,235,.7),rgba(255,255,255,.05));margin:26px 0 20px;position:relative;z-index:2}
-.cover-meta{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;max-width:148mm}
-.cover-meta .k{font-size:6.8pt;letter-spacing:.2em;text-transform:uppercase;color:#7a90b0;margin-bottom:2px}
-.cover-meta .v{font-size:9.4pt;color:#eaf2fb}
-.cover-bottom{position:absolute;left:32px;right:32px;bottom:22px;z-index:2;border-top:1px solid rgba(255,255,255,.1);padding-top:12px;display:flex;justify-content:space-between;font-size:7.4pt;color:#7a90b0}
-.cover-bottom strong{color:#eaf2fb}
-h2.sec{page-break-before:always;font-family:"C059","DejaVu Serif",Georgia,serif;font-size:19pt;line-height:1.2;color:#0b1b33;margin:0 0 4px;font-weight:bold}
-.sec-kicker{font-size:7pt;letter-spacing:.24em;text-transform:uppercase;color:#1d4ed8;font-weight:bold;margin-bottom:4px}
-.sec-head{border-bottom:2px solid #e3eaf3;padding-bottom:10px;margin-bottom:16px}
-.sec-head .abstract{font-size:9.6pt;color:#55657a;margin-top:7px;max-width:165mm}
-h3{font-size:11.6pt;color:#0b1b33;margin:16px 0 6px;font-weight:bold;break-after:avoid}
-h4{font-size:9.6pt;color:#12304f;margin:11px 0 4px;font-weight:bold;letter-spacing:.01em;break-after:avoid}
-h3 .n,h4 .n{color:#1d4ed8;margin-right:5px}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 12px;break-inside:avoid}
-.kpi{border:1px solid #e0e7f0;border-radius:4px;padding:9px 10px;background:#f8fafc;break-inside:avoid}
-.kpi .n{font-family:"C059",Georgia,serif;font-size:16pt;font-weight:bold;color:#0b1b33;line-height:1.1}
-.kpi .l{font-size:7.4pt;color:#64748b;margin-top:2px;line-height:1.3}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{border:1px solid #e0e7f0;border-radius:4px;padding:10px 12px;background:#fff;break-inside:avoid}
-.card h4{margin-top:0} .card p:last-child{margin-bottom:0}
-.callout,.warn,.ok{border-left:3px solid #1d4ed8;background:#eff6ff;padding:9px 12px;font-size:8.8pt;color:#334155;margin:10px 0;break-inside:avoid}
-.warn{border-color:#c2740a;background:#fdf7ec} .ok{border-color:#178a63;background:#f0faf6}
-.callout .t,.warn .t,.ok .t{display:block;font-size:7pt;letter-spacing:.18em;text-transform:uppercase;margin-bottom:3px;color:#1d4ed8}
-.warn .t{color:#a35f08} .ok .t{color:#137a58}
-table.tbl{width:100%;border-collapse:collapse;font-size:8.3pt;margin:8px 0 12px}
-table.tbl th{background:#1e3a8a;color:#eaf2fb;text-align:left;font-size:7.2pt;letter-spacing:.09em;text-transform:uppercase;padding:6px 7px;font-weight:bold}
-table.tbl td{border-bottom:1px solid #e3eaf3;padding:5.5px 7px;vertical-align:top;color:#334155}
-table.tbl tr:nth-child(even) td{background:#f8fafc} table.tbl td strong{color:#0b1b33}
-table.tbl .mono{font-size:7.4pt} table.tbl.compact td,table.tbl.compact th{padding:4px 6px}
-table.tbl thead{display:table-header-group} table.tbl tr{break-inside:avoid}
-.mod-head{border:1px solid #e0e7f0;border-left:4px solid #1d4ed8;border-radius:3px;padding:10px 13px;background:linear-gradient(100deg,#eff6ff,#ffffff 70%);margin:12px 0 10px;break-inside:avoid;break-after:avoid}
-.mod-head .id{font-family:"DejaVu Sans Mono",monospace;font-size:7pt;letter-spacing:.18em;color:#1d4ed8}
-.mod-head h3{margin:2px 0 2px;font-family:"C059",Georgia,serif;font-size:15pt}
-.mod-head .tagline{font-size:8.6pt;color:#64748b;font-style:italic}
-.tags{margin:5px 0 0} .tag{display:inline-block;font-size:6.6pt;letter-spacing:.07em;text-transform:uppercase;border:1px solid #e0e7f0;border-radius:3px;padding:1.5px 5px;margin:0 2px 2px 0;color:#4b5f77;background:#fff}
-.tag.cy{border-color:#93c5fd;background:#eff6ff;color:#1d4ed8} .tag.em{border-color:#a7f3d0;background:#ecfdf5;color:#065f46} .tag.am{border-color:#fde68a;background:#fefce8;color:#92400e}
-ul.ticks,ul.cross{list-style:none;padding:0;margin:4px 0 8px} ul.ticks li,ul.cross li{position:relative;padding-left:13px;margin-bottom:3.2px;font-size:8.7pt;color:#334155}
-ul.ticks li::before{content:"▪";position:absolute;left:0;top:-1px;color:#1d4ed8;font-size:9pt}
-ul.cross li::before{content:"×";position:absolute;left:0;top:-1px;color:#b4495f;font-weight:bold}
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px} .duo h4{margin-top:2px}
-.verdict{font-size:8.2pt;color:#475569;border-top:1px dashed #dbe4f0;padding-top:6px;margin-top:6px}
-.toc{margin-top:6px} .toc-row{display:grid;grid-template-columns:12mm 1fr auto;gap:4px;padding:4.2px 0;border-bottom:1px dotted #dbe4f0;font-size:9pt}
-.toc-row .num{font-family:"DejaVu Sans Mono",monospace;color:#1d4ed8;font-size:8pt}
-.toc-row .sub{color:#64748b;font-size:7.6pt;display:block;margin-top:1px}
-.toc-row .flag{font-size:7pt;color:#94a3b8} .toc-part{margin:12px 0 3px;font-size:7pt;letter-spacing:.22em;text-transform:uppercase;color:#94a3b8}
-.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 12px;break-inside:avoid}
-.step{border:1px solid #e0e7f0;border-radius:3px;padding:7px 8px;background:#f8fafc;break-inside:avoid}
-.step .n{font-family:"DejaVu Sans Mono",monospace;font-size:6.8pt;color:#1d4ed8;letter-spacing:.1em}
-.step .t{font-size:8pt;font-weight:bold;color:#0b1b33;margin:2px 0} .step .d{font-size:7.2pt;color:#64748b;line-height:1.35}
-.diagram{border:1px solid #e0e7f0;border-radius:4px;padding:10px 12px;background:#f8fafc;margin:8px 0 12px;break-inside:avoid}
-.layer{display:grid;grid-template-columns:26mm 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed #dbe4f0;align-items:start}
-.layer:last-child{border-bottom:none} .layer .k{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;color:#7c8ca1;padding-top:3px}
-.layer .v{font-size:8.2pt;color:#334155}
-.pill{display:inline-block;border:1px solid #e0e7f0;background:#fff;border-radius:3px;padding:1.5px 5px;margin:0 2px 2px 0;font-size:7.2pt}
-.pill.hi{border-color:#93c5fd;background:#eff6ff;color:#1d4ed8}
-.note{font-size:7.6pt;color:#7c8ca1} .pagebreak{page-break-before:always}
-.kv{display:grid;grid-template-columns:44mm 1fr;gap:2px 8px;font-size:8.6pt} .kv .k{color:#64748b} .kv .v{color:#0b1b33}
-.sig{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:24px;font-size:8pt;color:#64748b}
-.sig .line{border-top:1px solid #94a3b8;padding-top:4px;margin-top:24px}
-.code{font-family:"DejaVu Sans Mono",monospace;font-size:7.4pt;background:#0a1628;color:#eaf2fb;padding:9px 11px;border-radius:3px;white-space:pre-wrap;line-height:1.45;margin:7px 0 10px}
-.code .c{color:#93a8c8} .chk{list-style:none;padding:0;margin:4px 0} .chk li{position:relative;padding-left:16px;margin-bottom:3px;font-size:8.5pt}
-.chk li::before{content:"☐";position:absolute;left:0;top:-1px;color:#1d4ed8}
-</style></head><body>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>DSL-Déménagements — Spécification fonctionnelle & technique</title>
+<meta name="author" content="DSL Studio" />
+<meta name="description" content="Spécification fonctionnelle et technique de l'ERP de déménagement DSL-Déménagements." />
+<style>
+  @page { size: A4; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Nimbus Sans", "DejaVu Sans", Arial, sans-serif;
+    font-size: 9.4pt; line-height: 1.5; color: #1d2939;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  p { margin: 0 0 7pt; }
+  strong { color: #0b1b33; }
+  a { color: #1a5fd0; text-decoration: none; }
+  em { color: #334155; }
+  .mono { font-family: "DejaVu Sans Mono", monospace; font-size: 8pt; }
+  .muted { color: #64748b; }
+  .small { font-size: 8.2pt; line-height: 1.45; }
+  .center { text-align: center; }
 
+  /* ---------- COUVERTURE ---------- */
+  .cover {
+    page-break-after: always; position: relative; overflow: hidden;
+    background: linear-gradient(155deg, #06101e 0%, #0a1a30 48%, #0b2338 100%);
+    color: #eaf2fb; border-radius: 5px; padding: 30px 32px 24px; height: 258mm;
+  }
+  .cover::before {
+    content: ""; position: absolute; top: -160px; right: -150px;
+    width: 460px; height: 460px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(60,224,255,.32), transparent 63%);
+  }
+  .cover::after {
+    content: ""; position: absolute; bottom: -190px; left: -140px;
+    width: 430px; height: 430px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(246,196,83,.20), transparent 63%);
+  }
+  .cover-top { display: flex; align-items: center; gap: 11px; position: relative; z-index: 2; }
+  .mark {
+    width: 40px; height: 40px; border-radius: 11px; text-align: center; line-height: 40px;
+    font-weight: 800; font-size: 19pt; color: #06131f;
+    background: linear-gradient(135deg, #8af3ff, #3ce0ff 52%, #f6c453 135%);
+  }
+  .brand-name { font-size: 12pt; font-weight: 800; letter-spacing: .18em; }
+  .brand-sub { font-size: 6.6pt; letter-spacing: .32em; color: #7e93ad; text-transform: uppercase; margin-top: 2px; }
+  .cover-mid { position: relative; z-index: 2; margin-top: 46px; }
+  .cover-kicker {
+    display: inline-block; border: 1px solid rgba(60,224,255,.3); background: rgba(60,224,255,.07);
+    color: #9ff0ff; font-size: 7pt; letter-spacing: .22em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 999px; margin-bottom: 18px;
+  }
+  .cover h1 {
+    font-family: "C059", "DejaVu Serif", Georgia, serif;
+    font-size: 31pt; line-height: 1.12; font-weight: bold; margin: 0 0 14px; letter-spacing: -.01em;
+  }
+  .cover h1 span { color: #3ce0ff; }
+  .cover .sub {
+    font-size: 12pt; color: #b9c9dc; line-height: 1.45; max-width: 132mm; margin-bottom: 8px;
+  }
+  .cover .sub2 { font-size: 9pt; color: #8ea3ba; max-width: 136mm; }
+  .cover-rule { height: 1px; background: linear-gradient(90deg, rgba(60,224,255,.7), rgba(255,255,255,.05)); margin: 26px 0 20px; position: relative; z-index: 2; }
+  .cover-meta { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; max-width: 148mm; }
+  .cover-meta .k { font-size: 6.8pt; letter-spacing: .2em; text-transform: uppercase; color: #6f87a1; margin-bottom: 2px; }
+  .cover-meta .v { font-size: 9.4pt; color: #dbe7f4; }
+  .cover-bottom {
+    position: absolute; left: 32px; right: 32px; bottom: 22px; z-index: 2;
+    border-top: 1px solid rgba(255,255,255,.1); padding-top: 12px;
+    display: flex; justify-content: space-between; font-size: 7.4pt; color: #7f95ae;
+  }
+  .cover-bottom strong { color: #cfe2f5; }
+
+  /* ---------- TITRES ---------- */
+  h2.sec {
+    page-break-before: always; font-family: "C059", "DejaVu Serif", Georgia, serif;
+    font-size: 19pt; line-height: 1.2; color: #0b1b33; margin: 0 0 4px; font-weight: bold;
+  }
+  .sec-kicker {
+    font-size: 7pt; letter-spacing: .24em; text-transform: uppercase; color: #1f6feb;
+    font-weight: bold; margin-bottom: 4px;
+  }
+  .sec-head { border-bottom: 2px solid #e3eaf3; padding-bottom: 10px; margin-bottom: 16px; }
+  .sec-head .abstract { font-size: 9.6pt; color: #55657a; margin-top: 7px; max-width: 165mm; }
+  h3 { font-size: 11.6pt; color: #0b1b33; margin: 16px 0 6px; font-weight: bold; break-after: avoid; }
+  h4 { font-size: 9.6pt; color: #12304f; margin: 11px 0 4px; font-weight: bold; letter-spacing: .01em; break-after: avoid; }
+  h3 .n, h4 .n { color: #1f6feb; margin-right: 5px; }
+
+  /* ---------- BLOCS ---------- */
+  .lead { font-size: 10.6pt; line-height: 1.55; color: #334155; }
+  .kpis { break-inside: avoid; display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 10px 0 12px; }
+  .kpi { border: 1px solid #e0e7f0; border-radius: 4px; padding: 9px 10px; background: #f8fafc; break-inside: avoid; }
+  .kpi .n { font-family: "C059", Georgia, serif; font-size: 16pt; font-weight: bold; color: #0b1b33; line-height: 1.1; }
+  .kpi .l { font-size: 7.4pt; color: #64748b; margin-top: 2px; line-height: 1.3; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+  .card { border: 1px solid #e0e7f0; border-radius: 4px; padding: 10px 12px; background: #fff; break-inside: avoid; }
+  .card h4 { margin-top: 0; }
+  .card p:last-child { margin-bottom: 0; }
+  .callout, .warn, .ok {
+    border-left: 3px solid #1f6feb; background: #f3f7ff; padding: 9px 12px;
+    font-size: 8.8pt; color: #334155; margin: 10px 0; break-inside: avoid;
+  }
+  .warn { border-color: #c2740a; background: #fdf7ec; }
+  .ok { border-color: #178a63; background: #f0faf6; }
+  .callout strong, .warn strong, .ok strong { color: #0b1b33; }
+  .callout .t, .warn .t, .ok .t { display: block; font-size: 7pt; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 3px; color: #1f6feb; }
+  .warn .t { color: #a35f08; } .ok .t { color: #137a58; }
+
+  /* ---------- TABLEAUX ---------- */
+  table.tbl { width: 100%; border-collapse: collapse; font-size: 8.3pt; margin: 8px 0 12px; }
+  table.tbl th {
+    background: #0c1b2e; color: #e8f1fa; text-align: left; font-size: 7.2pt;
+    letter-spacing: .09em; text-transform: uppercase; padding: 6px 7px; font-weight: bold;
+  }
+  table.tbl td { border-bottom: 1px solid #e3eaf3; padding: 5.5px 7px; vertical-align: top; color: #334155; }
+  table.tbl tr:nth-child(even) td { background: #f8fafc; }
+  table.tbl td strong { color: #0b1b33; }
+  table.tbl .mono { font-size: 7.4pt; }
+  table.tbl.compact td, table.tbl.compact th { padding: 4px 6px; }
+  table.tbl.tight td, table.tbl.tight th { padding: 3px 6px; }
+  table.tbl.tight { font-size: 8pt; }
+  table.tbl thead { display: table-header-group; }
+  table.tbl tr { break-inside: avoid; }
+
+  /* ---------- FIGURES ---------- */
+  .fig { margin: 10px 0 12px; break-inside: avoid; }
+  .fig img { width: 100%; border: 1px solid #cfd9e6; border-radius: 4px; display: block; }
+  .figcap { font-size: 7.3pt; color: #64748b; margin-top: 4px; display: flex; justify-content: space-between; gap: 10px; }
+  .figcap .r { font-family: "DejaVu Sans Mono", monospace; font-size: 6.9pt; color: #7c8ca1; }
+
+  /* ---------- MODULES ---------- */
+  .mod-head {
+    border: 1px solid #dce5ef; border-left: 4px solid #1f6feb; border-radius: 3px;
+    padding: 10px 13px; background: linear-gradient(100deg, #f4f9fc, #ffffff 70%);
+    margin: 12px 0 10px; break-inside: avoid; break-after: avoid;
+  }
+  .mod-head.pb { page-break-before: always; }
+  .mod-head .id { font-family: "DejaVu Sans Mono", monospace; font-size: 7pt; letter-spacing: .18em; color: #1f6feb; }
+  .mod-head h3 { margin: 2px 0 2px; font-family: "C059", Georgia, serif; font-size: 15pt; }
+  .mod-head .tagline { font-size: 8.6pt; color: #64748b; font-style: italic; }
+  .tags { margin: 5px 0 0; }
+  .tag {
+    display: inline-block; font-size: 6.6pt; letter-spacing: .07em; text-transform: uppercase;
+    border: 1px solid #d3dfec; border-radius: 3px; padding: 1.5px 5px; margin: 0 2px 2px 0; color: #4b5f77; background: #fff;
+  }
+  .tag.cy { border-color: #b6d0fb; background: #eef4ff; color: #1a5fd0; }
+  .tag.am { border-color: #ecd49e; background: #fdf8ec; color: #96630c; }
+  .tag.em { border-color: #a9ddc9; background: #effaf5; color: #127a58; }
+  .tag.ro { border-color: #f0c0cb; background: #fdf0f3; color: #a83a55; }
+  ul.ticks, ul.cross { list-style: none; padding: 0; margin: 4px 0 8px; }
+  ul.ticks li, ul.cross li { position: relative; padding-left: 13px; margin-bottom: 3.2px; font-size: 8.7pt; color: #334155; }
+  ul.ticks li::before { content: "▪"; position: absolute; left: 0; top: -1px; color: #1f6feb; font-size: 9pt; }
+  ul.cross li::before { content: "×"; position: absolute; left: 0; top: -1px; color: #b4495f; font-weight: bold; }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .duo h4 { margin-top: 2px; }
+  .verdict { break-inside: avoid; font-size: 8.2pt; color: #475569; border-top: 1px dashed #dbe4ef; padding-top: 6px; margin-top: 6px; }
+  .verdict strong { color: #0b1b33; }
+
+  /* ---------- SOMMAIRE ---------- */
+  .toc { margin-top: 6px; }
+  .toc-row { display: grid; grid-template-columns: 12mm 1fr auto; gap: 4px; padding: 4.2px 0; border-bottom: 1px dotted #dbe4ef; font-size: 9pt; }
+  .toc-row .num { font-family: "DejaVu Sans Mono", monospace; color: #1f6feb; font-size: 8pt; }
+  .toc-row .sub { color: #64748b; font-size: 7.6pt; display: block; margin-top: 1px; }
+  .toc-row .flag { font-size: 7pt; color: #94a3b8; }
+  .toc-part { margin: 12px 0 3px; font-size: 7pt; letter-spacing: .22em; text-transform: uppercase; color: #94a3b8; }
+
+  /* ---------- DIVERS ---------- */
+  .flow { break-inside: avoid; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 8px 0 12px; }
+  .step { border: 1px solid #e0e7f0; border-radius: 3px; padding: 7px 8px; background: #fbfdff; break-inside: avoid; }
+  .step .n { font-family: "DejaVu Sans Mono", monospace; font-size: 6.8pt; color: #1f6feb; letter-spacing: .1em; }
+  .step .t { font-size: 8pt; font-weight: bold; color: #0b1b33; margin: 2px 0; }
+  .step .d { font-size: 7.2pt; color: #64748b; line-height: 1.35; }
+  .diagram { border: 1px solid #dce5ef; border-radius: 4px; padding: 10px 12px; background: #f9fbfd; margin: 8px 0 12px; break-inside: avoid; }
+  .layer { display: grid; grid-template-columns: 26mm 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px dashed #dde6f0; align-items: start; }
+  .layer:last-child { border-bottom: none; }
+  .layer .k { font-size: 6.8pt; letter-spacing: .12em; text-transform: uppercase; color: #7c8ca1; padding-top: 3px; }
+  .layer .v { font-size: 8.2pt; color: #334155; }
+  .pill { display: inline-block; border: 1px solid #d3dfec; background: #fff; border-radius: 3px; padding: 1.5px 5px; margin: 0 2px 2px 0; font-size: 7.2pt; }
+  .pill.hi { border-color: #a9c8f8; background: #eff5ff; color: #1a5fd0; }
+  .pill.wa { border-color: #ecd49e; background: #fdf8ec; color: #8a5a08; }
+  .note { font-size: 7.6pt; color: #7c8ca1; }
+  .pagebreak { page-break-before: always; }
+  .avoid { break-inside: avoid; }
+  .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .gallery figure { margin: 0; break-inside: avoid; }
+  .gallery img { width: 100%; border: 1px solid #cfd9e6; border-radius: 3px; display: block; }
+  .gallery figcaption { font-size: 6.9pt; color: #64748b; margin-top: 2px; }
+  .kv { display: grid; grid-template-columns: 44mm 1fr; gap: 2px 8px; font-size: 8.6pt; }
+  .kv .k { color: #64748b; }
+  .kv .v { color: #0b1b33; }
+  .sig { margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; font-size: 8pt; color: #64748b; }
+  .sig .line { border-top: 1px solid #94a3b8; padding-top: 4px; margin-top: 24px; }
+  .code {
+    font-family: "DejaVu Sans Mono", monospace; font-size: 7.4pt; background: #0f1c2e; color: #d7e6f5;
+    padding: 9px 11px; border-radius: 3px; white-space: pre-wrap; line-height: 1.45; margin: 7px 0 10px;
+  }
+  .code .c { color: #7f9bb8; }
+  .chk { list-style: none; padding: 0; margin: 4px 0; }
+  .chk li { position: relative; padding-left: 16px; margin-bottom: 3px; font-size: 8.5pt; }
+  .chk li::before { content: "☐"; position: absolute; left: 0; top: -1px; color: #1f6feb; }
+</style>
+</head>
+<body>
 <div class="cover">
-  <div class="cover-top"><div class="mark">D</div><div><div class="brand-name">DSL-DÉMÉNAGEMENTS</div><div class="brand-sub">Marketplace Logistique</div></div></div>
+  <div class="cover-top">
+    <div class="mark">D</div>
+    <div>
+      <div class="brand-name">DSL-DÉMÉNAGEMENTS</div>
+      <div class="brand-sub">Operating System · Édition 2026</div>
+    </div>
+  </div>
+
   <div class="cover-mid">
-    <div class="cover-kicker">Spécification produit · Édition 2026</div>
-    <h1>Marketplace de transport<br/><span>&amp; déménagement</span></h1>
-    <p class="sub">Spécification fonctionnelle et technique complète — mise en relation expéditeurs et transporteurs, enchères, suivi, évaluations.</p>
-    <p class="sub2">Document de référence pour la démonstration et l'intégration du produit.</p>
+    <div class="cover-kicker">Spécification fonctionnelle &amp; technique</div>
+    <h1>Du premier appel<br />à la facture.<br /><span>Un seul outil.</span></h1>
+    <p class="sub">ERP d'exploitation pour entreprises de déménagement : clients, prestations, équipes, flotte, garde-meuble, facturation et rapports.</p>
+    <p class="sub2">Analyse de la version déployée, dictionnaires de données, parcours utilisateurs, audit de maturité et feuille de route.</p>
   </div>
+
   <div class="cover-rule"></div>
+
   <div class="cover-meta">
-    <div><div class="k">Version</div><div class="v">1.0 — finale</div></div>
-    <div><div class="k">Date</div><div class="v">5 novembre 2026</div></div>
-    <div><div class="k">Application</div><div class="v">https://blueviolet-fox-642747.hostingersite.com</div></div>
-    <div><div class="k">Périmètre</div><div class="v">Marketplace B2B/B2C de transport et déménagement</div></div>
-    <div><div class="k">Stack</div><div class="v">React 18 · TypeScript · Express · PostgreSQL · Drizzle</div></div>
-    <div><div class="k">Diffusion</div><div class="v">Interne · direction, produit, développement</div></div>
+    <div><div class="k">Produit</div><div class="v">DSL-Déménagements</div></div>
+    <div><div class="k">Nature du document</div><div class="v">Dossier produit complet</div></div>
+    <div><div class="k">Version analysée</div><div class="v">Déploiement du 5 novembre 2026</div></div>
+    <div><div class="k">Périmètre</div><div class="v">11 écrans · 7 tables · 5 rapports</div></div>
+    <div><div class="k">Stack</div><div class="v">React · Vite · Supabase</div></div>
+    <div><div class="k">Application</div><div class="v">blueviolet-fox-642747.hostingersite.com</div></div>
   </div>
-  <div class="cover-bottom"><div><strong>blueviolet-fox-642747.hostingersite.com</strong> — document généré à partir du dossier produit</div><div>2 rôles · 5 tables · 6 statuts</div></div>
+
+  <div class="cover-bottom">
+    <div><strong>DSL-Déménagements</strong> · Spécification produit</div>
+    <div>16 chapitres · Document de référence</div>
+  </div>
+</div>
+<!-- ============================ SOMMAIRE ============================ -->
+<h2 class="sec" style="page-break-before:avoid">Sommaire</h2>
+<div class="sec-head">
+  <div class="abstract">Seize chapitres, de la vision produit au guide d'intégration de la vidéo. Les chapitres 05 et 07 constituent le cœur de la spécification fonctionnelle.</div>
 </div>
 
-<h2 class="sec" style="page-break-before:avoid">Sommaire</h2>
-<div class="sec-head"><div class="abstract">Quinze chapitres couvrant la vision, les fonctionnalités, le modèle de données, l'architecture et l'intégration vidéo.</div></div>
 <div class="toc">
   <div class="toc-part">Comprendre le produit</div>
-  <div class="toc-row"><span class="num">01</span><span>Résumé exécutif</span><span class="flag">Stratégie</span></div>
-  <div class="toc-row"><span class="num">02</span><span>Contexte et problème métier</span><span class="flag">Stratégie</span></div>
-  <div class="toc-row"><span class="num">03</span><span>Utilisateurs et rôles (expéditeur / transporteur)</span><span class="flag">Produit</span></div>
-  <div class="toc-row"><span class="num">04</span><span>Cartographie fonctionnelle</span><span class="flag">Produit</span></div>
+  <div class="toc-row"><span class="num">01</span><span>Résumé exécutif<span class="sub">Fiche d'identité, chiffres clés, périmètre réel, ce que le produit fait et ne fait pas</span></span><span class="flag">Stratégie</span></div>
+  <div class="toc-row"><span class="num">02</span><span>Contexte et problème métier<span class="sub">Douleurs terrain, promesse, principes de conception</span></span><span class="flag">Stratégie</span></div>
+  <div class="toc-row"><span class="num">03</span><span>Utilisateurs et rôles<span class="sub">Personas, matrice des droits théorique et réalité de l'accès</span></span><span class="flag">Produit</span></div>
+  <div class="toc-row"><span class="num">04</span><span>Cartographie fonctionnelle<span class="sub">Les 11 modules, la navigation, le cycle de vie de la donnée</span></span><span class="flag">Produit</span></div>
+
   <div class="toc-part">Spécification fonctionnelle</div>
-  <div class="toc-row"><span class="num">05</span><span>Analyse module par module</span><span class="flag">Cœur</span></div>
-  <div class="toc-row"><span class="num">06</span><span>Parcours utilisateurs</span><span class="flag">Cœur</span></div>
-  <div class="toc-row"><span class="num">07</span><span>Modèle de données (5 tables)</span><span class="flag">Cœur</span></div>
+  <div class="toc-row"><span class="num">05</span><span>Analyse module par module<span class="sub">11 modules : objectif, fonctions, dictionnaire de données, règles, limites</span></span><span class="flag">Cœur</span></div>
+  <div class="toc-row"><span class="num">06</span><span>Parcours utilisateurs<span class="sub">Commercial, exploitation, direction, mise en route</span></span><span class="flag">Cœur</span></div>
+  <div class="toc-row"><span class="num">07</span><span>Modèle de données<span class="sub">7 tables, dictionnaires de champs, relations, persistance, anomalies</span></span><span class="flag">Cœur</span></div>
+
   <div class="toc-part">Spécification technique</div>
-  <div class="toc-row"><span class="num">08</span><span>Architecture technique</span><span class="flag">Technique</span></div>
-  <div class="toc-row"><span class="num">09</span><span>Design system</span><span class="flag">Design</span></div>
-  <div class="toc-row"><span class="num">10</span><span>Sécurité et conformité</span><span class="flag">Risque</span></div>
+  <div class="toc-row"><span class="num">08</span><span>Architecture technique<span class="sub">Couches, stack, build, routage, performance</span></span><span class="flag">Technique</span></div>
+  <div class="toc-row"><span class="num">09</span><span>Design system<span class="sub">Tokens, typographie, composants, états, responsive, accessibilité</span></span><span class="flag">Design</span></div>
+  <div class="toc-row"><span class="num">10</span><span>Mode Démo et données de démonstration<span class="sub">Jeu de données factice, bascule, repli localStorage, conséquences</span></span><span class="flag">Technique</span></div>
+  <div class="toc-row"><span class="num">11</span><span>Sécurité, données et conformité<span class="sub">Surface d'attaque, RLS, rôles, risques, recommandations</span></span><span class="flag">Risque</span></div>
+
   <div class="toc-part">Décider et exploiter</div>
-  <div class="toc-row"><span class="num">11</span><span>Audit de maturité</span><span class="flag">Audit</span></div>
-  <div class="toc-row"><span class="num">12</span><span>Feuille de route</span><span class="flag">Plan</span></div>
-  <div class="toc-row"><span class="num">13</span><span>Exploitation et déploiement</span><span class="flag">Ops</span></div>
-  <div class="toc-row"><span class="num">14</span><span>Guide d'intégration vidéo</span><span class="flag">Production</span></div>
-  <div class="toc-row"><span class="num">15</span><span>Annexes</span><span class="flag">Référence</span></div>
+  <div class="toc-row"><span class="num">12</span><span>Audit de maturité<span class="sub">Notation par module, dette technique, qualité du code</span></span><span class="flag">Audit</span></div>
+  <div class="toc-row"><span class="num">13</span><span>Feuille de route<span class="sub">3 phases, livrables, critères d'acceptation</span></span><span class="flag">Plan</span></div>
+  <div class="toc-row"><span class="num">14</span><span>Exploitation et déploiement<span class="sub">Hébergement, procédures, sauvegarde, checklist de mise en production</span></span><span class="flag">Ops</span></div>
+  <div class="toc-row"><span class="num">15</span><span>Guide d'intégration vidéo<span class="sub">Spécifications, iframe, storyboard, script voix off</span></span><span class="flag">Production</span></div>
+  <div class="toc-row"><span class="num">16</span><span>Annexes<span class="sub">Routes, dépendances, captures, glossaire, traçabilité</span></span><span class="flag">Référence</span></div>
 </div>
 
+<div class="callout" style="margin-top:18px">
+  <span class="t">Conventions de lecture</span>
+  Les montants sont exprimés en euros dans l'application, avec un paramétrage de TVA à 20 % par défaut. Les chemins commençant par <span class="mono">/</span> désignent des routes de l'application. Les statuts « Complet », « Fonctionnel », « Partiel » et « Phase 2 » sont définis au chapitre 12. Les captures proviennent de la version déployée le 5 novembre 2026, alimentée par un jeu de démonstration.
+</div>
+
+<!-- ============================ 01 RESUME ============================ -->
 <h2 class="sec">01 · Résumé exécutif</h2>
-<div class="sec-head"><div class="abstract">Easy-Déménagement est une marketplace logistique connectant expéditeurs et transporteurs professionnels.</div></div>
-<h3><span class="n">1.1</span>Fiche d'identité</h3>
-<table class="tbl"><tbody>
-<tr><td style="width:34%"><strong>Nom</strong></td><td>DSL-Déménagements — Easy-Déménagement</td></tr>
-<tr><td><strong>Nature</strong></td><td>Marketplace web full-stack</td></tr>
-<tr><td><strong>Métier</strong></td><td>Mise en relation expéditeurs / transporteurs, enchères, suivi, évaluations</td></tr>
-<tr><td><strong>Marché</strong></td><td>Particuliers et professionnels (déménagement, transport de marchandises)</td></tr>
-<tr><td><strong>Stack</strong></td><td>React 18 · TypeScript · Tailwind · Express · PostgreSQL · Drizzle ORM</td></tr>
-<tr><td><strong>Rôles</strong></td><td>Expéditeur · Transporteur</td></tr>
-<tr><td><strong>Types de cargaison</strong></td><td>4 (déménagement, électroménager, matériaux, commercial)</td></tr>
-<tr><td><strong>Types de véhicules</strong></td><td>4 (fourgon, petit camion, camion benne, porte-engins)</td></tr>
-<tr><td><strong>Application</strong></td><td>https://blueviolet-fox-642747.hostingersite.com</td></tr>
-<tr><td><strong>État</strong></td><td>Démonstrateur avancé, prêt pour la démonstration</td></tr>
-</tbody></table>
-<h3><span class="n">1.2</span>Ce que le produit fait</h3>
+<div class="sec-head">
+  <div class="sec-kicker">Vue d'ensemble</div>
+  <div class="abstract">DSL-Déménagements est un ERP métier pour entreprises de déménagement : clients et sites, prestations, équipes, flotte, garde-meuble, facturation, calendrier et rapports dans une interface unique, adossée à Supabase.</div>
+</div>
+
+<h3><span class="n">1.1</span>Fiche d'identité du produit</h3>
+<table class="tbl">
+  <tbody>
+    <tr><td style="width:34%"><strong>Nom affiché dans l'application</strong></td><td>DSL-Déménagements</td></tr>
+    <tr><td><strong>Nature</strong></td><td>Application web mono-page (SPA) d'exploitation, avec base gérée</td></tr>
+    <tr><td><strong>Métier couvert</strong></td><td>Déménagement particulier et professionnel, transfert d'entreprise, garde-meuble, location de monte-meuble</td></tr>
+    <tr><td><strong>Périmètre fonctionnel</strong></td><td>Clients et sites, prestations, stockage, employés, véhicules, facturation, calendrier, rapports, profil, paramètres</td></tr>
+    <tr><td><strong>Langues</strong></td><td>Français (défaut) et anglais — interface traduite par libellés, sans infrastructure i18n complète</td></tr>
+    <tr><td><strong>Stack</strong></td><td>React 19 · TypeScript · Vite · Tailwind CSS · shadcn/ui · Radix UI · TanStack Table · FullCalendar · Recharts · Supabase</td></tr>
+    <tr><td><strong>Hébergement</strong></td><td>Hostinger — site statique <span class="mono">blueviolet-fox-642747.hostingersite.com</span> ; domaine prévu <span class="mono">digitalsolverland.space</span></td></tr>
+    <tr><td><strong>Persistance</strong></td><td>PostgreSQL géré par Supabase via PostgREST ; repli <span class="mono">localStorage</span> sur certains écrans</td></tr>
+    <tr><td><strong>Authentification</strong></td><td>Supabase Auth (e-mail / mot de passe), profil applicatif dans <span class="mono">profiles</span>, indicateur <span class="mono">is_super_admin</span></td></tr>
+    <tr><td><strong>Base de données</strong></td><td>7 tables : <span class="mono">clients, prestations, factures, vehicules, employes, box_stockage, profiles</span></td></tr>
+    <tr><td><strong>Intégrations</strong></td><td>Impression navigateur (fiche de prestation, facture, calendrier), export CSV / XLS, lien WhatsApp</td></tr>
+    <tr><td><strong>Volumétrie</strong></td><td>11 écrans métier + connexion · 7 tables · 5 types de prestation · 6 catégories de véhicules · 5 rapports</td></tr>
+    <tr><td><strong>État</strong></td><td>Application d'exploitation complète et utilisable en mono-entreprise — multi-tenant, RLS et contrôles de conflit restent à faire</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">1.2</span>Chiffres clés</h3>
+<div class="kpis">
+  <div class="kpi"><div class="n">11</div><div class="l">écrans métier documentés, plus la connexion</div></div>
+  <div class="kpi"><div class="n">7</div><div class="l">tables dans le schéma de données</div></div>
+  <div class="kpi"><div class="n">5</div><div class="l">types de prestation paramétrés</div></div>
+  <div class="kpi"><div class="n">6</div><div class="l">catégories de véhicules suivies</div></div>
+  <div class="kpi"><div class="n">5</div><div class="l">rapports prêts à générer et exporter</div></div>
+  <div class="kpi"><div class="n">3</div><div class="l">formats d'export : PDF, Excel, CSV</div></div>
+</div>
+
+<h3><span class="n">1.3</span>Ce que le produit fait — et ce qu'il ne fait pas</h3>
 <div class="grid2">
-<div class="card"><h4 style="color:#127a58">Livré</h4><ul class="ticks">
-<li>Authentification par rôles (expéditeur / transporteur).</li>
-<li>Formulaire de commande en 3 étapes avec validation Zod.</li>
-<li>Système d'enchères (offres concurrentielles).</li>
-<li>Suivi simulé sur carte interactive.</li>
-<li>Gestion de flotte véhicules.</li>
-<li>Système d'évaluation (1-5 étoiles + commentaire).</li>
-<li>Tableau de bord expéditeur et transporteur.</li>
-<li>6 statuts de commande trackés.</li>
-</ul></div>
-<div class="card"><h4 style="color:#a83a55">Hors périmètre</h4><ul class="cross">
-<li>Paiement en ligne et commission.</li>
-<li>Géolocalisation réelle (GPS).</li>
-<li>Signature électronique.</li>
-<li>Facturation et comptabilité.</li>
-<li>Application mobile native.</li>
-<li>Multi-langue.</li>
-</ul></div>
+  <div class="card">
+    <h4 style="color:#127a58">Périmètre réellement livré</h4>
+    <ul class="ticks">
+      <li>Créer et gérer les clients et leurs sites d'intervention.</li>
+      <li>Planifier une prestation avec type, date, durée, équipe et montant.</li>
+      <li>Assigner des boxes de garde-meuble avec échéance de contrat.</li>
+      <li>Tenir l'effectif, les équipes, les compétences et la masse salariale.</li>
+      <li>Suivre la flotte, son état et sa prochaine maintenance.</li>
+      <li>Émettre des factures avec TVA et suivre cinq statuts de paiement.</li>
+      <li>Visualiser les interventions au calendrier et les imprimer.</li>
+      <li>Générer cinq rapports et les exporter en PDF, Excel ou CSV.</li>
+      <li>S'authentifier et charger un profil applicatif depuis la base.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4 style="color:#a83a55">Hors périmètre de cette version</h4>
+    <ul class="cross">
+      <li>Isolation multi-entreprise : aucune colonne <span class="mono">tenant_id</span>.</li>
+      <li>Détection des conflits d'équipe, de véhicule ou de créneau.</li>
+      <li>Devis, contrats signés, photos et documents de chantier.</li>
+      <li>Pointage des heures réelles et gestion des congés.</li>
+      <li>Coûts d'exploitation : carburant, entretien, péages.</li>
+      <li>Relances de facture automatiques par e-mail ou SMS.</li>
+      <li>Envoi WhatsApp réellement branché à un service.</li>
+      <li>Portail client et application mobile terrain.</li>
+    </ul>
+  </div>
 </div>
 
+<div class="callout">
+  <span class="t">Lecture honnête</span>
+  Le produit est un outil d'exploitation sérieux : la chaîne client → prestation → facture → rapport fonctionne et les écrans sont denses, cohérents et imprimables. Les manques ne sont pas cosmétiques : ils portent sur l'isolation des données, la prévention des doubles réservations et la fiabilité du mode de démonstration. Ces trois points conditionnent une commercialisation multi-clients.
+</div>
+
+<!-- ============================ 02 CONTEXTE ============================ -->
 <h2 class="sec">02 · Contexte et problème métier</h2>
-<div class="sec-head"><div class="abstract">Trouver un transporteur fiable et au juste prix est difficile pour les particuliers et professionnels.</div></div>
-<p>Un expéditeur (particulier qui déménage ou professionnel qui expédie des marchandises) cherche un transporteur disponible, fiable et au bon prix. Un transporteur cherche du fret pour remplir ses véhicules. La mise en relation se fait souvent par téléphone, sans transparence sur les prix ni sur la réputation.</p>
-<h3><span class="n">2.1</span>Cinq douleurs, cinq réponses</h3>
-<table class="tbl"><thead><tr><th>Douleur</th><th>Conséquence</th><th>Réponse DSL</th></tr></thead><tbody>
-<tr><td><strong>Pas de visibilité sur les prix</strong></td><td>Surfacturation, méfiance</td><td>Enchères concurrentielles, prix suggéré</td></tr>
-<tr><td><strong>Transporteurs inconnus</strong></td><td>Risque, mauvaise expérience</td><td>Profils, évaluations, réputation</td></tr>
-<tr><td><strong>Pas de suivi</strong></td><td>Anxiété, appels répétés</td><td>Suivi simulé sur carte, statuts clairs</td></tr>
-<tr><td><strong>Recherche manuelle</strong></td><td>Perte de temps</td><td>Marketplace avec filtres par ville</td></tr>
-<tr><td><strong>Pas de traçabilité</strong></td><td>Litiges, pas de preuve</td><td>Historique complet, évaluations mutuelles</td></tr>
-</tbody></table>
+<div class="sec-head">
+  <div class="sec-kicker">Pourquoi ce produit existe</div>
+  <div class="abstract">Une entreprise de déménagement pilote simultanément des clients, des équipes, des camions, des boxes et des factures. La plupart le font encore avec un tableur, un carnet et WhatsApp.</div>
+</div>
 
+<h3><span class="n">2.1</span>Les douleurs du terrain</h3>
+<table class="tbl">
+  <thead><tr><th style="width:26%">Douleur</th><th>Manifestation concrète</th><th style="width:30%">Réponse apportée</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Double saisie</strong></td><td>Le client est créé dans le tableur, recopié dans le devis, puis dans la facture. Une correction n'est jamais propagée.</td><td>Une fiche client unique réutilisée par les prestations, les factures et les boxes.</td></tr>
+    <tr><td><strong>Planning invisible</strong></td><td>Personne ne sait si l'équipe B est libre jeudi, ni si le 30 m³ est en maintenance.</td><td>Calendrier des prestations et disponibilité des véhicules et des employés.</td></tr>
+    <tr><td><strong>Garde-meuble flou</strong></td><td>Des boxes occupés dont la fin de contrat est oubliée, donc non refacturés.</td><td>Boxes avec dates de début et de fin, statut et notification activable.</td></tr>
+    <tr><td><strong>Facturation tardive</strong></td><td>La facture part une semaine après le déménagement, quand elle part.</td><td>Facture rattachée à la prestation, numérotée et imprimable immédiatement.</td></tr>
+    <tr><td><strong>Pilotage à l'aveugle</strong></td><td>Le dirigeant découvre son chiffre d'affaires en fin de mois.</td><td>Tableau de bord quotidien et cinq rapports exportables.</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">2.2</span>La promesse</h3>
+<p class="lead">Un seul outil, du premier appel à l'encaissement : le client entre une fois, la prestation se planifie, l'équipe et le véhicule se mobilisent, le box s'assigne, la facture se génère et le rapport se lit. Aucune information ne devrait avoir à être saisie deux fois.</p>
+
+<h3><span class="n">2.3</span>Principes de conception</h3>
+<div class="grid3">
+  <div class="card"><h4>Densité maîtrisée</h4><p>Des tableaux compacts, triables et paginés, pensés pour un écran de bureau utilisé toute la journée — pas pour une page marketing.</p></div>
+  <div class="card"><h4>Langage métier</h4><p>Les libellés parlent déménagement : prestation, garde-meuble, monte-meuble, chef d'équipe. Le jargon technique reste dans le code.</p></div>
+  <div class="card"><h4>Sortie papier</h4><p>Chaque objet important s'imprime : fiche de prestation pour l'équipe, facture pour le client, calendrier pour le dépôt.</p></div>
+</div>
+
+<!-- ============================ 03 ROLES ============================ -->
 <h2 class="sec">03 · Utilisateurs et rôles</h2>
-<div class="sec-head"><div class="abstract">Deux rôles, une même plateforme, interface adaptée.</div></div>
-<table class="tbl"><thead><tr><th>Rôle</th><th>Objectif</th><th>Accès</th></tr></thead><tbody>
-<tr><td><strong>Expéditeur</strong></td><td>Transporter des biens</td><td>Créer des demandes, recevoir des offres, suivre, évaluer</td></tr>
-<tr><td><strong>Transporteur</strong></td><td>Trouver du fret</td><td>Parcourir les commandes, enchérir, gérer la flotte, être évalué</td></tr>
-</tbody></table>
+<div class="sec-head">
+  <div class="sec-kicker">Qui utilise l'outil, et avec quels droits</div>
+  <div class="abstract">Quatre profils métier se partagent l'application. Techniquement, deux niveaux seulement sont distingués : super-administrateur et utilisateur authentifié.</div>
+</div>
 
+<h3><span class="n">3.1</span>Personas</h3>
+<table class="tbl">
+  <thead><tr><th style="width:20%">Persona</th><th style="width:24%">Usage principal</th><th>Écrans fréquents</th><th style="width:20%">Besoin dominant</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Gérant / direction</strong></td><td>Piloter l'activité et arbitrer</td><td>Tableau de bord, rapports, facturation</td><td>Voir la marge et les impayés</td></tr>
+    <tr><td><strong>Responsable d'exploitation</strong></td><td>Planifier les chantiers</td><td>Prestations, calendrier, employés, véhicules</td><td>Éviter les collisions de planning</td></tr>
+    <tr><td><strong>Assistant administratif</strong></td><td>Facturer et relancer</td><td>Clients, facturation, stockage</td><td>Ne rien oublier à facturer</td></tr>
+    <tr><td><strong>Chef d'équipe</strong></td><td>Exécuter sur le terrain</td><td>Fiche de prestation imprimée</td><td>Savoir où, quand, avec qui</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">3.2</span>Matrice des droits</h3>
+<table class="tbl compact">
+  <thead><tr><th>Capacité</th><th>Super-admin</th><th>Utilisateur authentifié</th><th>Non authentifié</th></tr></thead>
+  <tbody>
+    <tr><td>Accéder au tableau de bord et aux modules</td><td>Oui</td><td>Oui</td><td>Redirigé vers <span class="mono">/login</span></td></tr>
+    <tr><td>Créer / modifier / supprimer une prestation</td><td>Oui</td><td>Oui</td><td>Non</td></tr>
+    <tr><td>Émettre et imprimer une facture</td><td>Oui</td><td>Oui</td><td>Non</td></tr>
+    <tr><td>Gérer les employés et les véhicules</td><td>Oui</td><td>Oui</td><td>Non</td></tr>
+    <tr><td>Consulter les rapports financiers</td><td>Oui</td><td>Oui</td><td>Non</td></tr>
+    <tr><td>Gérer les comptes et les rôles</td><td>Indicateur présent, écran absent</td><td>Non</td><td>Non</td></tr>
+    <tr><td>Cloisonner les données par entreprise</td><td colspan="3" style="color:#a83a55">Non implémenté : toutes les lignes sont visibles par tout compte authentifié.</td></tr>
+  </tbody>
+</table>
+
+<div class="warn">
+  <span class="t">Écart entre le discours et le code</span>
+  L'interface affiche un badge « Super Admin » et charge <span class="mono">profiles.is_super_admin</span>, mais aucune route ni aucun bouton n'est réellement réservé à ce rôle. La distinction est aujourd'hui décorative : elle doit devenir une matrice de permissions appliquée côté interface <em>et</em> côté base.
+</div>
+
+<!-- ============================ 04 CARTOGRAPHIE ============================ -->
 <h2 class="sec">04 · Cartographie fonctionnelle</h2>
-<div class="sec-head"><div class="abstract">Modules et cycle de vie d'une commande.</div></div>
-<table class="tbl"><thead><tr><th>#</th><th>Module</th><th>Maturité</th></tr></thead><tbody>
-<tr><td>01</td><td><strong>Authentification &amp; rôles</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>02</td><td><strong>Création de commande (3 étapes)</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>03</td><td><strong>Enchères (bidding)</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>04</td><td><strong>Suivi sur carte</strong></td><td><span class="tag am">Simulé</span></td></tr>
-<tr><td>05</td><td><strong>Gestion de flotte</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>06</td><td><strong>Évaluations</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>07</td><td><strong>Tableau de bord expéditeur</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>08</td><td><strong>Tableau de bord transporteur</strong></td><td><span class="tag em">Complet</span></td></tr>
-</tbody></table>
-<h3><span class="n">4.1</span>Cycle de vie d'une commande</h3>
-<div class="flow">
-<div class="step"><div class="n">STATUT 1</div><div class="t">pending</div><div class="d">Demande créée par l'expéditeur.</div></div>
-<div class="step"><div class="n">STATUT 2</div><div class="t">bidding</div><div class="d">Offres reçues des transporteurs.</div></div>
-<div class="step"><div class="n">STATUT 3</div><div class="t">assigned</div><div class="d">Offre acceptée, transporteur assigné.</div></div>
-<div class="step"><div class="n">STATUT 4</div><div class="t">in_transit</div><div class="d">En cours de livraison.</div></div>
-<div class="step"><div class="n">STATUT 5</div><div class="t">completed</div><div class="d">Livraison effectuée.</div></div>
-<div class="step"><div class="n">STATUT 6</div><div class="t">cancelled</div><div class="d">Annulation possible à tout moment.</div></div>
+<div class="sec-head">
+  <div class="sec-kicker">Vue d'ensemble des modules</div>
+  <div class="abstract">Onze modules regroupés en trois familles : exploitation, administration, pilotage. La navigation latérale les expose dans l'ordre du flux de travail.</div>
 </div>
 
+<h3><span class="n">4.1</span>Navigation</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:22%">Entrée de menu</th><th style="width:24%">Route</th><th>Rôle dans le flux</th><th style="width:18%">Table principale</th></tr></thead>
+  <tbody>
+    <tr><td>Dashboard</td><td class="mono">/dashboard</td><td>Synthèse du jour, alertes, accès rapide</td><td>agrégats</td></tr>
+    <tr><td>Sites Clients</td><td class="mono">/sites-clients</td><td>Référentiel clients et adresses</td><td class="mono">clients</td></tr>
+    <tr><td>Stockage</td><td class="mono">/stockage</td><td>Boxes de garde-meuble et échéances</td><td class="mono">box_stockage</td></tr>
+    <tr><td>Prestations</td><td class="mono">/prestations</td><td>Cœur du métier : interventions planifiées</td><td class="mono">prestations</td></tr>
+    <tr><td>Employés</td><td class="mono">/employes</td><td>Effectif, équipes, compétences</td><td class="mono">employes</td></tr>
+    <tr><td>Véhicules</td><td class="mono">/vehicules</td><td>Flotte, état, maintenance</td><td class="mono">vehicules</td></tr>
+    <tr><td>Facturation</td><td class="mono">/facturation</td><td>Factures, TVA, statuts de paiement</td><td class="mono">factures</td></tr>
+    <tr><td>Calendrier</td><td class="mono">/calendrier</td><td>Vue mensuelle des interventions</td><td class="mono">prestations</td></tr>
+    <tr><td>Rapports</td><td class="mono">/rapports</td><td>Analyse et export</td><td>agrégats</td></tr>
+    <tr><td>Profil</td><td class="mono">/profil</td><td>Compte et sécurité</td><td class="mono">profiles</td></tr>
+    <tr><td>Paramètres</td><td class="mono">/parametres</td><td>Notifications, apparence, langue</td><td class="mono">profiles</td></tr>
+    <tr><td>Connexion</td><td class="mono">/login</td><td>Porte d'entrée</td><td class="mono">auth</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">4.2</span>Cycle de vie de la donnée</h3>
+<div class="flow">
+  <div class="step"><div class="n">01</div><div class="t">Client</div><div class="d">Créé dans Sites Clients avec adresse, contact, téléphone et e-mail.</div></div>
+  <div class="step"><div class="n">02</div><div class="t">Prestation</div><div class="d">Relie le client, un type, une date, une équipe, un véhicule et un montant.</div></div>
+  <div class="step"><div class="n">03</div><div class="t">Exécution</div><div class="d">Le calendrier et la fiche imprimée pilotent l'intervention.</div></div>
+  <div class="step"><div class="n">04</div><div class="t">Facture</div><div class="d">Reprend le client et la prestation, applique la TVA, suit le paiement.</div></div>
+</div>
+
+<div class="callout">
+  <span class="t">Un schéma en étoile</span>
+  Presque tout converge vers deux tables : <span class="mono">clients</span> (qui possède les sites et les boxes) et <span class="mono">prestations</span> (qui porte la date, l'équipe, le véhicule et la facture). Toute évolution du modèle doit préserver cette lisibilité.
+</div>
+
+<!-- ============================ 05 MODULES ============================ -->
 <h2 class="sec">05 · Analyse module par module</h2>
-<div class="sec-head"><div class="abstract">Huit modules : objectif, fonctions, données, limites.</div></div>
-
-<div class="mod-head"><div class="id">MODULE 01</div><h3>Authentification &amp; rôles</h3><div class="tagline">Sécuriser l'accès à la plateforme</div><div class="tags"><span class="tag cy">Auth</span><span class="tag">Cookies</span><span class="tag em">Complet</span></div></div>
-<p>Inscription et connexion sécurisées par cookies de session. Chaque utilisateur choisit son rôle (expéditeur ou transporteur) à la création du compte.</p>
-
-<div class="mod-head"><div class="id">MODULE 02</div><h3>Création de commande (3 étapes)</h3><div class="tagline">Déposer une demande en 3 minutes</div><div class="tags"><span class="tag">Stepper</span><span class="tag">Zod</span><span class="tag em">Complet</span></div></div>
-<p>Interface guidée avec stepper : trajet (adresses), marchandise (type + poids + volume), détails finaux (date, heure, prix suggéré). Validation Zod à chaque étape.</p>
-<div class="duo"><div><h4>Étape 1 — Trajet</h4><ul class="ticks"><li>Adresse complète de départ.</li><li>Adresse complète d'arrivée.</li><li>Validation en temps réel.</li></ul></div>
-<div><h4>Étape 2 — Marchandise</h4><ul class="ticks"><li>Type de cargaison (4 choix).</li><li>Description détaillée.</li><li>Poids estimé (kg), volume (m³).</li></ul></div></div>
-<div class="duo"><div><h4>Étape 3 — Détails &amp; prix</h4><ul class="ticks"><li>Date et heure de collecte.</li><li>Prix suggéré (€).</li><li>Soumission sécurisée.</li></ul></div>
-<div><h4>Types de cargaison</h4><ul class="ticks"><li>Déménagement complet.</li><li>Électroménager.</li><li>Matériaux de construction.</li><li>Transport commercial.</li></ul></div></div>
-
-<div class="mod-head"><div class="id">MODULE 03</div><h3>Système d'enchères (bidding)</h3><div class="tagline">Le meilleur prix par la concurrence</div><div class="tags"><span class="tag cy">Enchères</span><span class="tag">Offres</span><span class="tag em">Complet</span></div></div>
-<p>Les transporteurs soumettent des offres concurrentielles avec prix, véhicule et message. L'expéditeur accepte ou rejette chaque offre. Statuts d'offre : pending, accepted, rejected.</p>
-
-<div class="mod-head"><div class="id">MODULE 04</div><h3>Suivi sur carte</h3><div class="tagline">Où est mon transport ?</div><div class="tags"><span class="tag am">Simulé</span><span class="tag">Carte</span></div></div>
-<p>Visualisation interactive de la progression de livraison sur carte. Simulation temps réel du déplacement du camion de l'adresse de départ à l'adresse d'arrivée.</p>
-<div class="warn"><span class="t">Limite</span>Le suivi est simulé (pas de GPS réel). La géolocalisation réelle est hors périmètre de cette version.</div>
-
-<div class="mod-head"><div class="id">MODULE 05</div><h3>Gestion de flotte</h3><div class="tagline">Les véhicules du transporteur</div><div class="tags"><span class="tag">CRUD</span><span class="tag">Véhicules</span><span class="tag em">Complet</span></div></div>
-<p>Les transporteurs enregistrent leurs véhicules (type, marque, modèle, immatriculation, capacité). Sélection du véhicule lors de chaque soumission d'offre. 4 types : fourgon, petit camion, camion benne, porte-engins.</p>
-
-<div class="mod-head"><div class="id">MODULE 06</div><h3>Évaluations</h3><div class="tagline">Construire la réputation</div><div class="tags"><span class="tag">Rating</span><span class="tag em">Complet</span></div></div>
-<p>Après chaque livraison, les deux parties se notent mutuellement (1-5 étoiles + commentaire). Construit la réputation des transporteurs sur la plateforme.</p>
-
-<div class="mod-head"><div class="id">MODULE 07</div><h3>Tableau de bord expéditeur</h3><div class="tagline">Mes commandes en un coup d'œil</div><div class="tags"><span class="tag">Dashboard</span><span class="tag em">Complet</span></div></div>
-<p>Vue complète des commandes créées avec leur statut, les offres reçues, le transporteur assigné et l'accès aux détails de chaque expédition.</p>
-
-<div class="mod-head"><div class="id">MODULE 08</div><h3>Tableau de bord transporteur</h3><div class="tagline">Trouver du fret, gérer la flotte</div><div class="tags"><span class="tag">Dashboard</span><span class="tag em">Complet</span></div></div>
-<p>Deux onglets : « Trouver du fret » (commandes en attente avec recherche par ville) et « Ma Flotte » (gestion des véhicules enregistrés). Ajout de véhicule en popup.</p>
-
-<h2 class="sec">06 · Parcours utilisateurs</h2>
-<div class="sec-head"><div class="abstract">Deux parcours : expéditeur et transporteur.</div></div>
-<h3><span class="n">6.1</span>Expéditeur — créer une demande</h3>
-<div class="flow">
-<div class="step"><div class="n">ÉTAPE 1</div><div class="t">Trajet</div><div class="d">Adresses départ/arrivée.</div></div>
-<div class="step"><div class="n">ÉTAPE 2</div><div class="t">Marchandise</div><div class="d">Type, description, poids, volume.</div></div>
-<div class="step"><div class="n">ÉTAPE 3</div><div class="t">Détails</div><div class="d">Date, heure, prix suggéré.</div></div>
-<div class="step"><div class="n">ÉTAPE 4</div><div class="t">Publication</div><div class="d">Demande visible par les transporteurs.</div></div>
-</div>
-<h3><span class="n">6.2</span>Transporteur — enchérir et livrer</h3>
-<p>Le transporteur parcourt les commandes, filtre par ville, soumet une offre (prix, véhicule, message). L'expéditeur accepte. Le transporteur met à jour le statut jusqu'à la livraison, puis évaluation mutuelle.</p>
-
-<h2 class="sec">07 · Modèle de données</h2>
-<div class="sec-head"><div class="abstract">Cinq tables relationnelles, Drizzle ORM, PostgreSQL.</div></div>
-<table class="tbl"><thead><tr><th>Table</th><th>Champs principaux</th><th>Contraintes</th></tr></thead><tbody>
-<tr><td><strong>users</strong></td><td class="mono">id, email, firstName, lastName, phone, userType, passwordHash, createdAt</td><td>email unique, userType shipper/carrier</td></tr>
-<tr><td><strong>vehicles</strong></td><td class="mono">id, carrierId, vehicleType, brand, model, licensePlate, capacityKg, capacityM3, isActive</td><td>FK users, licensePlate unique</td></tr>
-<tr><td><strong>orders</strong></td><td class="mono">id, shipperId, carrierId, pickupAddress, deliveryAddress, cargoType, description, weightKg, volumeM3, suggestedPrice, status, pickupDate</td><td>6 statuts, FK users</td></tr>
-<tr><td><strong>bids</strong></td><td class="mono">id, orderId, carrierId, vehicleId, proposedPrice, message, status</td><td>FK orders/users/vehicles, statut pending/accepted/rejected</td></tr>
-<tr><td><strong>reviews</strong></td><td class="mono">id, orderId, reviewerId, revieweeId, rating, comment, createdAt</td><td>rating 1-5, FK orders/users</td></tr>
-</tbody></table>
-
-<h2 class="sec">08 · Architecture technique</h2>
-<div class="sec-head"><div class="abstract">Full-stack TypeScript, séparation claire, déployé sur Hostinger.</div></div>
-<div class="diagram">
-<div class="layer"><div class="k">Frontend</div><div class="v"><span class="pill hi">React 18</span><span class="pill">TypeScript</span><span class="pill">Tailwind CSS</span><span class="pill">Radix UI</span><span class="pill">Framer Motion</span><span class="pill">Wouter</span><span class="pill">TanStack Query</span></div></div>
-<div class="layer"><div class="k">Backend</div><div class="v"><span class="pill wa">Express.js</span><span class="pill">Node.js</span><span class="pill">API REST</span><span class="pill">Zod validation</span></div></div>
-<div class="layer"><div class="k">Données</div><div class="v"><span class="pill">PostgreSQL</span><span class="pill">Drizzle ORM</span></div></div>
-<div class="layer"><div class="k">Auth</div><div class="v"><span class="pill">Cookies de session</span><span class="pill">Rôles</span></div></div>
-<div class="layer"><div class="k">Déploiement</div><div class="v"><span class="pill hi">Hostinger Node.js</span></div></div>
+<div class="sec-head">
+  <div class="sec-kicker">Spécification fonctionnelle détaillée</div>
+  <div class="abstract">Chaque module est décrit par son objectif, ses fonctions réelles, ses champs, ses règles et ses limites constatées dans la version déployée.</div>
 </div>
 
-<h2 class="sec">09 · Design system</h2>
-<div class="sec-head"><div class="abstract">Thème clair bleu/vert, typographie système, responsive.</div></div>
-<p>Palette bleue (#2563eb) et verte (#16a34a) sur fond blanc. Typographie système (Segoe UI / Roboto). Composants : cartes, badges, stepper. 100 % responsive mobile/tablette/desktop.</p>
-
-<h2 class="sec">10 · Sécurité et conformité</h2>
-<div class="sec-head"><div class="abstract">Authentification par rôle, validation Zod, sessions.</div></div>
+<!-- MODULE 1 -->
+<div class="mod-head">
+  <div class="id">MODULE 01</div>
+  <h3>Tableau de bord</h3>
+  <div class="tagline">La journée de l'exploitation en un écran</div>
+  <div class="tags"><span class="tag cy">Dashboard</span><span class="tag">KPI</span><span class="tag am">Mode Démo</span></div>
+</div>
+<p><strong>Objectif.</strong> Donner en moins de dix secondes la température de l'entreprise : combien on a facturé ce mois, combien de clients sont entrés, combien de prestations sont planifiées cette semaine et combien de factures attendent. Puis enchaîner sur ce qui se passe aujourd'hui.</p>
+<h4>Fonctions</h4>
 <ul class="ticks">
-<li>Authentification par email + mot de passe hashé.</li>
-<li>Deux rôles avec accès différencié.</li>
-<li>Validation Zod côté client et serveur.</li>
-<li>Sessions via cookies sécurisés.</li>
-<li>Contraintes d'intégrité en base (FK, unique).</li>
+  <li>Quatre indicateurs : chiffre d'affaires du mois, nouveaux clients, prestations planifiées dans la semaine, factures en attente.</li>
+  <li>Planning du jour : liste des prestations datées du jour, avec client, type et horaire.</li>
+  <li>Panneau d'alertes : facture en retard, maintenance véhicule due aujourd'hui ou demain.</li>
+  <li>Bascule Mode Démo / données réelles, active par défaut à la première ouverture.</li>
+  <li>Rafraîchissement automatique des données toutes les cinq minutes.</li>
 </ul>
-<div class="warn"><span class="t">Vigilance</span>Pas de paiement en ligne dans cette version — les transactions sont hors plateforme. Aucune politique de conservation des données (RGPD) n'est formalisée.</div>
-
-<h2 class="sec">11 · Audit de maturité</h2>
-<div class="sec-head"><div class="abstract">Huit modules, tous fonctionnels.</div></div>
-<table class="tbl"><thead><tr><th>Module</th><th>Note</th><th>État</th></tr></thead><tbody>
-<tr><td>Authentification &amp; rôles</td><td><strong>4/5</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>Création de commande</td><td><strong>4.5/5</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>Enchères</td><td><strong>4.5/5</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>Suivi sur carte</td><td><strong>3/5</strong></td><td><span class="tag am">Simulé</span></td></tr>
-<tr><td>Gestion de flotte</td><td><strong>4/5</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>Évaluations</td><td><strong>4/5</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>Tableau de bord expéditeur</td><td><strong>4/5</strong></td><td><span class="tag em">Complet</span></td></tr>
-<tr><td>Tableau de bord transporteur</td><td><strong>4/5</strong></td><td><span class="tag em">Complet</span></td></tr>
-</tbody></table>
-<div class="kpis" style="grid-template-columns:repeat(4,1fr)">
-<div class="kpi"><div class="n">4.0<span style="font-size:9pt">/5</span></div><div class="l">maturité moyenne</div></div>
-<div class="kpi"><div class="n">7<span style="font-size:9pt">/8</span></div><div class="l">modules complets</div></div>
-<div class="kpi"><div class="n">2</div><div class="l">rôles utilisateurs</div></div>
-<div class="kpi"><div class="n">5</div><div class="l">tables PostgreSQL</div></div>
+<h4>Règles de calcul</h4>
+<table class="tbl compact">
+  <thead><tr><th>Indicateur</th><th>Source</th><th>Règle</th></tr></thead>
+  <tbody>
+    <tr><td>Chiffre d'affaires (mois)</td><td class="mono">factures</td><td>Somme des montants TTC des factures dont la date d'émission tombe dans le mois courant.</td></tr>
+    <tr><td>Nouveaux clients</td><td class="mono">clients</td><td>Nombre de fiches créées sur la période affichée.</td></tr>
+    <tr><td>Prestations planifiées</td><td class="mono">prestations</td><td>Prestations dont la date est comprise dans la semaine courante.</td></tr>
+    <tr><td>Factures en attente</td><td class="mono">factures</td><td>Statut « En attente » ou « Partiellement payée ».</td></tr>
+  </tbody>
+</table>
+<div class="warn">
+  <span class="t">Limite constatée</span>
+  En Mode Démo, les quatre indicateurs affichent des valeurs figées (12 345 €, 23, 15, 8) et le planning du jour peut rester vide alors que des prestations de démonstration existent. Le bandeau « Mode Démo » est le seul signal : un utilisateur peut prendre ces chiffres pour sa réalité.
 </div>
 
-<h2 class="sec">12 · Feuille de route</h2>
-<div class="sec-head"><div class="abstract">Évolutions pour passer à l'échelle.</div></div>
-<table class="tbl compact"><thead><tr><th>Phase</th><th>Livrables</th></tr></thead><tbody>
-<tr><td><strong>Phase 1</strong></td><td>Paiement en ligne, commission plateforme, géolocalisation réelle (GPS).</td></tr>
-<tr><td><strong>Phase 2</strong></td><td>Application mobile native, facturation, multi-langue.</td></tr>
-<tr><td><strong>Phase 3</strong></td><td>Assurance transport, API partenaires, analytics avancés.</td></tr>
-</tbody></table>
-
-<h2 class="sec">13 · Exploitation et déploiement</h2>
-<div class="sec-head"><div class="abstract">Hébergement Node.js sur Hostinger, HTTPS actif.</div></div>
-<table class="tbl compact"><tbody>
-<tr><td style="width:30%"><strong>Domaine</strong></td><td>blueviolet-fox-642747.hostingersite.com</td></tr>
-<tr><td><strong>Type</strong></td><td>Node.js (React + Express + PostgreSQL)</td></tr>
-<tr><td><strong>Base de données</strong></td><td>PostgreSQL (Hostinger)</td></tr>
-<tr><td><strong>HTTPS</strong></td><td>Actif</td></tr>
-<tr><td><strong>Code source</strong></td><td>github.com/solver492/demenagement</td></tr>
-</tbody></table>
-
-<h2 class="sec">14 · Guide d'intégration vidéo</h2>
-<div class="sec-head"><div class="abstract">Vidéo de présentation déjà intégrée dans la page descriptive.</div></div>
-<p>La page descriptive contient une vidéo de présentation complète. Pour remplacer, modifier l'URL dans l'iframe de la section « Présentation vidéo ».</p>
-
-<h2 class="sec">15 · Annexes</h2>
-<div class="sec-head"><div class="abstract">Glossaire et traçabilité.</div></div>
-<h3><span class="n">15.1</span>Glossaire</h3>
-<table class="tbl compact"><tbody>
-<tr><td><strong>Expéditeur</strong></td><td>Particulier ou professionnel qui a besoin de transporter des biens.</td></tr>
-<tr><td><strong>Transporteur</strong></td><td>Professionnel du transport qui recherche du fret.</td></tr>
-<tr><td><strong>Enchère (bid)</strong></td><td>Offre d'un transporteur avec prix, véhicule et message.</td></tr>
-<tr><td><strong>Cargaison</strong></td><td>Marchandise à transporter (4 types).</td></tr>
-<tr><td><strong>Statut</strong></td><td>État d'une commande (6 statuts).</td></tr>
-</tbody></table>
-<div style="margin-top:26px;border-top:2px solid #e3eaf3;padding-top:14px" class="small muted">
-<strong style="color:#0b1b33">DSL-Déménagements — Spécification fonctionnelle et technique · v1.0 · 5 novembre 2026.</strong><br/>
-Application : https://blueviolet-fox-642747.hostingersite.com · Code : github.com/solver492/demenagement<br/>
-Document établi à partir du dossier produit et de l'application déployée.
+<!-- MODULE 2 -->
+<div class="mod-head">
+  <div class="id">MODULE 02</div>
+  <h3>Sites clients</h3>
+  <div class="tagline">Le carnet d'adresses qui alimente tout le reste</div>
+  <div class="tags"><span class="tag cy">CRUD</span><span class="tag">Recherche</span><span class="tag">Pagination</span></div>
 </div>
-</body></html>
+<p><strong>Objectif.</strong> Tenir le référentiel des clients et de leurs sites d'intervention. Chaque fiche contient l'adresse exacte, le contact sur place et les coordonnées, réutilisés ensuite dans les prestations, les factures et les boxes.</p>
+<h4>Fonctions</h4>
+<ul class="ticks">
+  <li>Liste paginée avec recherche instantanée sur le nom, l'adresse, le contact, le téléphone et l'e-mail.</li>
+  <li>Tri par colonne et sélection multiple.</li>
+  <li>Création et modification par formulaire modal.</li>
+  <li>Suppression avec boîte de confirmation.</li>
+  <li>Compteur de clients en tête de page.</li>
+</ul>
+<h4>Dictionnaire de champs — <span class="mono">clients</span></h4>
+<table class="tbl compact">
+  <thead><tr><th style="width:22%">Champ</th><th style="width:16%">Type</th><th>Contenu</th><th style="width:14%">Obligatoire</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">nom</td><td>texte</td><td>Raison sociale ou nom du particulier</td><td>Oui</td></tr>
+    <tr><td class="mono">contact</td><td>texte</td><td>Personne à joindre sur place</td><td>Non</td></tr>
+    <tr><td class="mono">telephone</td><td>texte</td><td>Numéro principal, format local libre</td><td>Oui</td></tr>
+    <tr><td class="mono">email</td><td>texte</td><td>Adresse de facturation</td><td>Non</td></tr>
+    <tr><td class="mono">adresse</td><td>texte</td><td>Adresse complète du site</td><td>Oui</td></tr>
+    <tr><td class="mono">ville</td><td>texte</td><td>Ville du site, utilisée pour les boxes</td><td>Non</td></tr>
+  </tbody>
+</table>
+<div class="verdict"><strong>Verdict.</strong> Module complet et solide. Deux manques : pas d'import CSV pour reprendre un fichier existant, pas de détection de doublons sur le nom ou le téléphone.</div>
+
+<!-- MODULE 3 -->
+<div class="mod-head">
+  <div class="id">MODULE 03</div>
+  <h3>Prestations</h3>
+  <div class="tagline">Le cœur du métier, de la demande à l'intervention</div>
+  <div class="tags"><span class="tag cy">Prestations</span><span class="tag">Planning</span><span class="tag em">Impression</span></div>
+</div>
+<p><strong>Objectif.</strong> Décrire une intervention : qui, où, quand, combien de temps, avec quelle équipe, pour quel montant. C'est l'objet central de l'application, celui dont dépendent le calendrier, la facturation et les rapports.</p>
+<h4>Fonctions</h4>
+<ul class="ticks">
+  <li>Liste triée par date décroissante, avec recherche et filtres.</li>
+  <li>Création et modification avec sélection du client existant ou saisie libre.</li>
+  <li>Détail complet en panneau latéral, actions Modifier, Voir les détails, Imprimer, Supprimer.</li>
+  <li>Fiche de prestation imprimable, prête à remettre au chef d'équipe.</li>
+</ul>
+<h4>Types et statuts</h4>
+<div class="grid2">
+  <div class="card">
+    <h4>Types de prestation</h4>
+    <ul class="ticks">
+      <li>Déménagement Particulier</li>
+      <li>Transfert Entreprise</li>
+      <li>Garde-meuble</li>
+      <li>Location Monte-Meuble</li>
+      <li>Autre</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Statuts du cycle de vie</h4>
+    <table class="tbl tight" style="margin:0">
+      <tbody>
+        <tr><td class="mono">confirmee</td><td>Confirmée</td></tr>
+        <tr><td class="mono">en_cours</td><td>En cours</td></tr>
+        <tr><td class="mono">terminee</td><td>Terminée</td></tr>
+        <tr><td class="mono">reportee</td><td>Reportée</td></tr>
+        <tr><td class="mono">annulee</td><td>Annulée</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<h4>Dictionnaire de champs — <span class="mono">prestations</span></h4>
+<table class="tbl compact">
+  <thead><tr><th style="width:26%">Champ</th><th style="width:14%">Type</th><th>Contenu</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">client_id</td><td>uuid</td><td>Référence vers <span class="mono">clients</span></td></tr>
+    <tr><td class="mono">nom_client</td><td>texte</td><td>Nom figé au moment de la création</td></tr>
+    <tr><td class="mono">type_prestation</td><td>énumération</td><td>Un des cinq types ci-dessus</td></tr>
+    <tr><td class="mono">date_prestation</td><td>date + heure</td><td>Début de l'intervention</td></tr>
+    <tr><td class="mono">time_prestation</td><td>texte</td><td>Horaire affiché au format HH:MM</td></tr>
+    <tr><td class="mono">duree_estimee</td><td>nombre</td><td>Durée en heures</td></tr>
+    <tr><td class="mono">statut</td><td>énumération</td><td>Statut du cycle de vie</td></tr>
+    <tr><td class="mono">nombre_employes</td><td>nombre</td><td>Effectif total affecté</td></tr>
+    <tr><td class="mono">nombre_manutentionnaires</td><td>nombre</td><td>Dont manutentionnaires</td></tr>
+    <tr><td class="mono">montant_ht</td><td>numérique</td><td>Montant hors taxes</td></tr>
+    <tr><td class="mono">details_prestation</td><td>texte long</td><td>Contraintes, volume, étage, ascenseur</td></tr>
+  </tbody>
+</table>
+<div class="warn">
+  <span class="t">Défaut d'affichage identifié</span>
+  Dans la liste, la colonne Statut rend la clé brute de la base (<span class="mono">en_cours</span>, <span class="mono">terminee</span>) au lieu du libellé français. Le détail affiche parfois le libellé correct : la table de correspondance n'est pas appliquée au même endroit. Correction à prévoir en phase 1.
+</div>
+
+<!-- MODULE 4 -->
+<div class="mod-head">
+  <div class="id">MODULE 04</div>
+  <h3>Stockage &amp; garde-meuble</h3>
+  <div class="tagline">Chaque mètre cube compte</div>
+  <div class="tags"><span class="tag cy">Stockage</span><span class="tag am">Échéances</span><span class="tag">WhatsApp</span></div>
+</div>
+<p><strong>Objectif.</strong> Suivre les boxes de stockage par ville : capacité, client assigné, dates de contrat et statut d'occupation. C'est le lien entre un déménagement et un revenu récurrent.</p>
+<h4>Fonctions</h4>
+<ul class="ticks">
+  <li>Liste des boxes avec ville, espace, client, dates et statut.</li>
+  <li>Statuts Vide, Occupé et Réservé, avec code couleur.</li>
+  <li>Assignation d'un client en un clic et notes libres.</li>
+  <li>Notification de fin de contrat activable par box.</li>
+  <li>Indicateur d'occupation globale du parc.</li>
+</ul>
+<h4>Dictionnaire de champs — <span class="mono">box_stockage</span></h4>
+<table class="tbl compact">
+  <thead><tr><th style="width:26%">Champ</th><th style="width:14%">Type</th><th>Contenu</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">nom_box</td><td>texte</td><td>Identifiant lisible du box (Box A-01)</td></tr>
+    <tr><td class="mono">ville</td><td>texte</td><td>Site de stockage</td></tr>
+    <tr><td class="mono">espace</td><td>texte</td><td>Volume disponible en m³</td></tr>
+    <tr><td class="mono">client_id</td><td>uuid</td><td>Client locataire, nullable</td></tr>
+    <tr><td class="mono">date_debut</td><td>date</td><td>Début du contrat de garde-meuble</td></tr>
+    <tr><td class="mono">date_fin</td><td>date</td><td>Fin prévue, déclenche l'alerte</td></tr>
+    <tr><td class="mono">notifications_active</td><td>booléen</td><td>Active le rappel de fin de contrat</td></tr>
+    <tr><td class="mono">statut</td><td>énumération</td><td>Vide · Occupé · Réservé</td></tr>
+  </tbody>
+</table>
+<div class="verdict"><strong>Verdict.</strong> Le module est fonctionnel et bien pensé. L'envoi WhatsApp est un lien prérempli, pas une notification automatique : le libellé doit être corrigé ou l'intégration réalisée.</div>
+
+<!-- MODULE 5 -->
+<div class="mod-head">
+  <div class="id">MODULE 05</div>
+  <h3>Employés &amp; équipes</h3>
+  <div class="tagline">Savoir qui est libre, qui sait faire quoi</div>
+  <div class="tags"><span class="tag cy">RH</span><span class="tag">Équipes</span><span class="tag">Compétences</span></div>
+</div>
+<p><strong>Objectif.</strong> Constituer l'effectif mobilisable : poste, équipe, disponibilité, compétences et coût journalier. C'est la brique qui rend le planning crédible.</p>
+<h4>Fonctions</h4>
+<ul class="ticks">
+  <li>Fiche employé avec nom, poste, équipe, disponibilité et compétences.</li>
+  <li>Sept postes paramétrés, du chef d'équipe au superviseur.</li>
+  <li>Salaire journalier et masse salariale agrégée.</li>
+  <li>Date d'embauche et statut actif / archivé.</li>
+  <li>Compteurs : effectif total, disponibles, occupés, en congé.</li>
+</ul>
+<h4>Postes et disponibilités</h4>
+<table class="tbl compact">
+  <thead><tr><th style="width:40%">Postes</th><th>Disponibilités</th></tr></thead>
+  <tbody>
+    <tr><td>Chef d'équipe · Manutentionnaire · Chauffeur · Déménageur · Coordinateur · Assistant · Superviseur</td><td>Disponible · Occupé · En congé</td></tr>
+  </tbody>
+</table>
+<div class="verdict"><strong>Verdict.</strong> Bonne base RH. Il manque le pointage des heures réelles, la gestion des congés et le lien direct entre une prestation et les employés nominativement affectés : aujourd'hui la prestation ne stocke qu'un nombre.</div>
+
+<!-- MODULE 6 -->
+<div class="mod-head">
+  <div class="id">MODULE 06</div>
+  <h3>Véhicules &amp; maintenance</h3>
+  <div class="tagline">La flotte ne tombe jamais en panne sans prévenir</div>
+  <div class="tags"><span class="tag cy">Flotte</span><span class="tag am">Maintenance</span><span class="tag">Alertes</span></div>
+</div>
+<p><strong>Objectif.</strong> Connaître à tout instant la capacité disponible, l'état de chaque véhicule et la prochaine échéance d'entretien, pour ne pas découvrir une panne le matin du chantier.</p>
+<h4>Fonctions</h4>
+<ul class="ticks">
+  <li>Fiche véhicule : immatriculation, type, marque, modèle, capacité, état.</li>
+  <li>Six catégories : camion 30 m³, camion 20 m³, fourgonnette 12 m³, camionnette 8 m³, monte-meubles, remorque.</li>
+  <li>Statut de disponibilité : Disponible, En mission, En maintenance.</li>
+  <li>Date de prochaine maintenance et alerte automatique à J et J+1.</li>
+  <li>Notes d'entretien et historique simple.</li>
+</ul>
+<div class="callout">
+  <span class="t">Règle d'alerte</span>
+  À chaque chargement du tableau de bord, l'application compare la date de prochaine maintenance de chaque véhicule à la date du jour. Si l'échéance est aujourd'hui, une alerte de niveau <em>warning</em> est levée ; si elle est demain, une alerte <em>info</em>. Ces alertes remontent dans le panneau « Alertes et Notifications ».
+</div>
+<div class="verdict"><strong>Verdict.</strong> Module propre et utile. Il manque le coût réel d'exploitation (carburant, entretien, péages) et l'affectation nominative d'un véhicule à une prestation.</div>
+
+<!-- MODULE 7 -->
+<div class="mod-head">
+  <div class="id">MODULE 07</div>
+  <h3>Facturation</h3>
+  <div class="tagline">Du bon de commande à l'encaissement</div>
+  <div class="tags"><span class="tag cy">Facturation</span><span class="tag">TVA 20 %</span><span class="tag em">PDF</span></div>
+</div>
+<p><strong>Objectif.</strong> Transformer une prestation réalisée en facture numérotée, puis suivre son règlement jusqu'à l'encaissement.</p>
+<h4>Fonctions</h4>
+<ul class="ticks">
+  <li>Numérotation lisible (FA-AAAA-NNNN), date d'émission et date d'échéance.</li>
+  <li>Montant HT, taux de TVA et montant TTC calculé automatiquement.</li>
+  <li>Cinq statuts : Payée, En attente, En retard, Partiellement payée, Annulée.</li>
+  <li>Rattachement à un client et à une prestation.</li>
+  <li>Impression PDF via le navigateur, sans service tiers.</li>
+</ul>
+<h4>Règle de calcul du TTC</h4>
+<div class="code">TTC = montant_ht + (montant_ht × taux_tva)
+<span class="c">// taux_tva par défaut : 0.20 — modifiable facture par facture</span>
+<span class="c">// le montant TTC est recalculé à l'affichage, jamais stocké</span></div>
+<div class="warn">
+  <span class="t">Point de vigilance</span>
+  Le montant TTC n'est pas persisté : il est recalculé à chaque lecture à partir de <span class="mono">montant_ht</span> et <span class="mono">taux_tva</span>. C'est sain pour l'intégrité, mais toute modification du taux après émission réécrit l'historique. Une facture émise doit figer ses montants.
+</div>
+
+<!-- MODULE 8 -->
+<div class="mod-head">
+  <div class="id">MODULE 08</div>
+  <h3>Calendrier des prestations</h3>
+  <div class="tagline">Voir la semaine avant qu'elle n'arrive</div>
+  <div class="tags"><span class="tag cy">Calendrier</span><span class="tag">FullCalendar</span><span class="tag em">Impression</span></div>
+</div>
+<p><strong>Objectif.</strong> Offrir une lecture temporelle de l'activité : ce qui est prévu, ce qui est en cours, ce qui a été reporté ou annulé.</p>
+<h4>Fonctions</h4>
+<ul class="ticks">
+  <li>Vue mensuelle avec navigation mois précédent / suivant.</li>
+  <li>Événements colorés par type de prestation.</li>
+  <li>Panneau de détail des interventions du jour sélectionné.</li>
+  <li>Création d'un événement libre pour un imprévu.</li>
+  <li>Impression du calendrier pour l'affichage au dépôt.</li>
+</ul>
+<div class="verdict"><strong>Verdict.</strong> Module lisible et efficace. Il manque les vues par équipe et par véhicule, qui sont précisément ce qu'un exploitant cherche quand il doit arbitrer.</div>
+
+<!-- MODULE 9 -->
+<div class="mod-head">
+  <div class="id">MODULE 09</div>
+  <h3>Rapports &amp; analytique</h3>
+  <div class="tagline">Les chiffres qui déclenchent une décision</div>
+  <div class="tags"><span class="tag cy">Analytique</span><span class="tag am">5 rapports</span><span class="tag">Export</span></div>
+</div>
+<p><strong>Objectif.</strong> Passer du suivi quotidien à la décision : où part le chiffre d'affaires, quelles équipes sont surchargées, quels véhicules dorment.</p>
+<h4>Les cinq rapports</h4>
+<table class="tbl compact">
+  <thead><tr><th style="width:26%">Rapport</th><th>Contenu</th><th style="width:22%">Décision associée</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Résumé financier</strong></td><td>Chiffre d'affaires, encaissements, impayés sur 30 jours</td><td>Relancer ou arbitrer la trésorerie</td></tr>
+    <tr><td><strong>Efficacité opérationnelle</strong></td><td>Prestations terminées, durée moyenne, taux d'annulation</td><td>Réviser les estimations de durée</td></tr>
+    <tr><td><strong>Aperçu clientèle</strong></td><td>Répartition des clients, fréquence, panier moyen</td><td>Cibler les comptes à fort potentiel</td></tr>
+    <tr><td><strong>Utilisation des véhicules</strong></td><td>Taux de disponibilité, missions par catégorie</td><td>Décider d'un achat ou d'une location</td></tr>
+    <tr><td><strong>Distribution des manutentionnaires</strong></td><td>Charge par équipe et par poste</td><td>Rééquilibrer les équipes</td></tr>
+  </tbody>
+</table>
+<h4>Exports</h4>
+<p>Trois sorties sont proposées pour chaque rapport : <strong>CSV</strong> (téléchargement), <strong>Excel</strong> (fichier XLS) et <strong>PDF</strong> (impression navigateur). Les indicateurs se recalculent sur une fenêtre glissante de 30 jours et une vue comparative par site est disponible.</p>
+<div class="verdict"><strong>Verdict.</strong> Le module le plus mature après la facturation. Il manque les périodes personnalisées, la marge réelle (coûts vs recettes) et l'export planifié par e-mail.</div>
+
+<!-- MODULE 10 -->
+<div class="mod-head">
+  <div class="id">MODULE 10</div>
+  <h3>Profil &amp; paramètres</h3>
+  <div class="tagline">Un compte, des préférences, une trace</div>
+  <div class="tags"><span class="tag cy">Profil</span><span class="tag">Thème</span><span class="tag">Journal</span></div>
+</div>
+<p><strong>Objectif.</strong> Permettre à chaque utilisateur de gérer son compte et son environnement de travail, et garder une trace des actions sensibles.</p>
+<h4>Fonctions</h4>
+<ul class="ticks">
+  <li>Photo de profil, nom, e-mail et téléphone.</li>
+  <li>Changement de mot de passe.</li>
+  <li>Thème clair, sombre ou système.</li>
+  <li>Langue française ou anglaise.</li>
+  <li>Notifications activables et journal d'activité.</li>
+</ul>
+<div class="warn">
+  <span class="t">Promesse non tenue</span>
+  Les cases « 2FA », « SMS » et « WhatsApp » existent dans les paramètres mais ne sont reliées à aucun service d'envoi ni à aucun mécanisme d'authentification à deux facteurs. Elles doivent être retirées ou implémentées : une case cochée qui ne fait rien est un risque de confiance.
+</div>
+
+<!-- MODULE 11 -->
+<div class="mod-head">
+  <div class="id">MODULE 11</div>
+  <h3>Connexion</h3>
+  <div class="tagline">Une porte d'entrée unique</div>
+  <div class="tags"><span class="tag cy">Auth</span><span class="tag">Supabase</span><span class="tag">Session</span></div>
+</div>
+<p><strong>Objectif.</strong> Authentifier l'utilisateur et charger son profil applicatif avant d'ouvrir l'application.</p>
+<h4>Fonctions</h4>
+<ul class="ticks">
+  <li>Connexion par e-mail et mot de passe via Supabase Auth.</li>
+  <li>Chargement du profil depuis <span class="mono">profiles</span> : nom, téléphone, avatar, indicateur super-admin.</li>
+  <li>Avatar de secours généré si aucun n'est fourni.</li>
+  <li>Redirection vers <span class="mono">/login</span> en l'absence de session valide.</li>
+  <li>Déconnexion et changement de mot de passe.</li>
+</ul>
+<div class="verdict"><strong>Verdict.</strong> L'authentification est réelle et correctement déléguée. Le point à traiter n'est pas la connexion mais ce qui se passe après : l'autorisation et l'isolation des données.</div>
+<!-- ============================ 06 PARCOURS ============================ -->
+<h2 class="sec">06 · Parcours utilisateurs</h2>
+<div class="sec-head">
+  <div class="sec-kicker">Le flux réel, écran par écran</div>
+  <div class="abstract">Quatre parcours structurent l'usage : vendre et qualifier, planifier et exécuter, facturer et relancer, piloter. Chacun est décrit par ses étapes et ses points de friction.</div>
+</div>
+
+<h3><span class="n">6.1</span>Parcours commercial — du premier appel à la prestation</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:8%">Étape</th><th style="width:24%">Écran</th><th>Action</th><th style="width:26%">Résultat attendu</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Sites Clients</td><td>Rechercher le client par téléphone ou nom. S'il n'existe pas, créer la fiche avec l'adresse exacte du site.</td><td>Fiche client unique, réutilisable partout.</td></tr>
+    <tr><td>2</td><td>Prestations</td><td>Créer la prestation : type, date, heure, durée estimée, nombre d'employés et de manutentionnaires, montant HT, détails.</td><td>Intervention planifiée et visible au calendrier.</td></tr>
+    <tr><td>3</td><td>Calendrier</td><td>Vérifier visuellement la charge de la semaine et l'absence de doublon apparent.</td><td>Confirmation de la date au client.</td></tr>
+    <tr><td>4</td><td>Prestations</td><td>Imprimer la fiche de prestation.</td><td>Document papier pour le chef d'équipe.</td></tr>
+  </tbody>
+</table>
+<p class="note">Friction : la vérification de disponibilité réelle de l'équipe et du véhicule reste manuelle. L'application ne bloque pas une double affectation.</p>
+
+<h3><span class="n">6.2</span>Parcours exploitation — la journée du responsable</h3>
+<div class="flow">
+  <div class="step"><div class="n">07:30</div><div class="t">Ouvrir le dashboard</div><div class="d">Lire le planning du jour, les alertes de maintenance et les factures en retard.</div></div>
+  <div class="step"><div class="n">08:00</div><div class="t">Arbitrer</div><div class="d">Consulter Employés et Véhicules pour vérifier qui est disponible et quel camion est libre.</div></div>
+  <div class="step"><div class="n">12:00</div><div class="t">Ajuster</div><div class="d">Passer une prestation en « En cours » ou « Terminée », reporter ou annuler si besoin.</div></div>
+  <div class="step"><div class="n">18:00</div><div class="t">Clôturer</div><div class="d">Vérifier que toutes les prestations du jour sont terminées et facturables.</div></div>
+</div>
+
+<h3><span class="n">6.3</span>Parcours administratif — facturer et relancer</h3>
+<ul class="ticks">
+  <li>Depuis <strong>Facturation</strong>, créer la facture en sélectionnant le client et la prestation associée.</li>
+  <li>Vérifier le montant HT, le taux de TVA et le TTC calculé.</li>
+  <li>Imprimer la facture au format PDF navigateur et l'envoyer au client.</li>
+  <li>Suivre le statut : En attente → Payée, ou En retard si l'échéance est dépassée.</li>
+  <li>Consulter le <strong>Résumé financier</strong> pour la liste des impayés.</li>
+</ul>
+
+<h3><span class="n">6.4</span>Mise en route d'une nouvelle entreprise</h3>
+<ol style="font-size:9pt;line-height:1.7;padding-left:18px">
+  <li>Créer le compte administrateur dans Supabase Auth.</li>
+  <li>Insérer la ligne correspondante dans <span class="mono">profiles</span> avec <span class="mono">is_super_admin = true</span>.</li>
+  <li>Paramétrer les employés, les équipes et les véhicules.</li>
+  <li>Créer les boxes de stockage par ville.</li>
+  <li>Saisir les clients existants et leurs sites.</li>
+  <li>Vérifier le taux de TVA par défaut et la numérotation des factures.</li>
+  <li>Désactiver le Mode Démo avant la première utilisation réelle.</li>
+</ol>
+
+<!-- ============================ 07 MODELE DE DONNEES ============================ -->
+<h2 class="sec">07 · Modèle de données</h2>
+<div class="sec-head">
+  <div class="sec-kicker">Le socle</div>
+  <div class="abstract">Sept tables PostgreSQL reliées par des clés étrangères simples. Le schéma est lisible et suffisant pour une mono-entreprise ; il lui manque la dimension tenant et quelques entités métier.</div>
+</div>
+
+<h3><span class="n">7.1</span>Vue d'ensemble</h3>
+<div class="diagram">
+  <div class="layer"><div class="k">Référentiel</div><div class="v"><span class="pill hi">clients</span> <span class="pill">profiles</span></div></div>
+  <div class="layer"><div class="k">Exploitation</div><div class="v"><span class="pill hi">prestations</span> <span class="pill">employes</span> <span class="pill">vehicules</span> <span class="pill">box_stockage</span></div></div>
+  <div class="layer"><div class="k">Finance</div><div class="v"><span class="pill wa">factures</span></div></div>
+  <div class="layer"><div class="k">Relations</div><div class="v">clients 1—N prestations · clients 1—N factures · clients 1—N box_stockage · prestations 1—N factures</div></div>
+</div>
+
+<h3><span class="n">7.2</span>Dictionnaire des tables</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:18%">Table</th><th style="width:34%">Champs principaux</th><th>Rôle</th></tr></thead>
+  <tbody>
+    <tr><td><strong class="mono">clients</strong></td><td>id, nom, contact, telephone, email, adresse, ville, created_at</td><td>Référentiel des clients et de leurs sites d'intervention.</td></tr>
+    <tr><td><strong class="mono">prestations</strong></td><td>id, client_id, nom_client, type_prestation, date_prestation, time_prestation, duree_estimee, statut, nombre_employes, nombre_manutentionnaires, montant_ht, details_prestation, description</td><td>Objet central : l'intervention planifiée.</td></tr>
+    <tr><td><strong class="mono">factures</strong></td><td>id, numero_facture, client_id, prestation_id, date_emission, date_echeance, montant_ht, taux_tva, statut</td><td>Facturation et suivi du règlement.</td></tr>
+    <tr><td><strong class="mono">vehicules</strong></td><td>id, immatriculation, type, marque, modele, capacite, etat, prochaineMaintenance, statut</td><td>Flotte et maintenance.</td></tr>
+    <tr><td><strong class="mono">employes</strong></td><td>id, nom, poste, equipe, nb_manutentionnaires_equipe, disponibilite, salaire_journalier, competences, email, telephone, date_embauche, actif, avatar_url</td><td>Effectif, équipes et coût journalier.</td></tr>
+    <tr><td><strong class="mono">box_stockage</strong></td><td>id, nom_box, ville, espace, client_id, date_debut, date_fin, notifications_active, statut, notes</td><td>Garde-meuble et échéances de contrat.</td></tr>
+    <tr><td><strong class="mono">profiles</strong></td><td>id, full_name, avatar_url, phone, is_super_admin, username</td><td>Profil applicatif lié au compte d'authentification.</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">7.3</span>Anomalies de modélisation</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:30%">Constat</th><th>Conséquence</th><th style="width:26%">Correction recommandée</th></tr></thead>
+  <tbody>
+    <tr><td>Dénomination mixte <span class="mono">prochaineMaintenance</span> en camelCase au milieu de colonnes snake_case</td><td>Confusion dans les requêtes et les exports</td><td>Renommer en <span class="mono">prochaine_maintenance</span> avec migration</td></tr>
+    <tr><td>Aucune colonne <span class="mono">tenant_id</span></td><td>Impossible d'isoler plusieurs entreprises</td><td>Ajouter la colonne et les politiques RLS</td></tr>
+    <tr><td>Prestation liée à un nombre d'employés, pas à des identifiants</td><td>Impossible de savoir qui était réellement affecté</td><td>Table de jonction <span class="mono">prestation_employes</span></td></tr>
+    <tr><td>Aucune table de liaison prestation ↔ véhicule</td><td>La flotte n'est pas rattachée aux interventions</td><td>Table de jonction <span class="mono">prestation_vehicules</span></td></tr>
+    <tr><td>Pas de table de devis ni de documents</td><td>Le cycle commercial amont est hors outil</td><td>Ajouter <span class="mono">devis</span> et <span class="mono">documents</span></td></tr>
+    <tr><td>Montant TTC recalculé, jamais stocké</td><td>Une facture émise peut changer de montant</td><td>Figer les montants à l'émission</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">7.4</span>Persistance et mode dégradé</h3>
+<p>La persistance nominale est assurée par Supabase (PostgreSQL + PostgREST). En cas d'indisponibilité de la base, plusieurs écrans retombent sur <span class="mono">localStorage</span> : les données restent visibles sur le poste mais ne sont ni partagées ni sauvegardées. Ce comportement est pratique pour une démonstration hors ligne ; en production, il crée deux sources de vérité et doit être désactivé ou explicitement signalé à l'utilisateur.</p>
+
+<!-- ============================ 08 ARCHITECTURE ============================ -->
+<h2 class="sec">08 · Architecture technique</h2>
+<div class="sec-head">
+  <div class="sec-kicker">Sous le capot</div>
+  <div class="abstract">Une application front compilée par Vite, servie en statique, qui parle directement à Supabase. Aucun serveur applicatif à maintenir, aucune API intermédiaire.</div>
+</div>
+
+<h3><span class="n">8.1</span>Couches</h3>
+<div class="diagram">
+  <div class="layer"><div class="k">Interface</div><div class="v"><span class="pill hi">React 19</span><span class="pill hi">Vite</span><span class="pill">TypeScript</span><span class="pill">Tailwind CSS</span><span class="pill">shadcn/ui</span><span class="pill">Radix UI</span><span class="pill">Framer Motion</span></div></div>
+  <div class="layer"><div class="k">Composants métier</div><div class="v"><span class="pill">TanStack Table</span><span class="pill">FullCalendar</span><span class="pill">Recharts</span><span class="pill">react-hook-form</span><span class="pill">Zod</span><span class="pill">date-fns</span></div></div>
+  <div class="layer"><div class="k">Accès données</div><div class="v"><span class="pill wa">@supabase/supabase-js</span><span class="pill">PostgREST</span><span class="pill">Realtime</span></div></div>
+  <div class="layer"><div class="k">Base</div><div class="v"><span class="pill wa">PostgreSQL managé</span><span class="pill">7 tables</span><span class="pill">RLS à auditer</span></div></div>
+  <div class="layer"><div class="k">Authentification</div><div class="v"><span class="pill wa">Supabase Auth</span><span class="pill">E-mail / mot de passe</span><span class="pill">Profil applicatif</span><span class="pill">Super-admin</span></div></div>
+  <div class="layer"><div class="k">Sorties</div><div class="v"><span class="pill">Fiche de prestation</span><span class="pill">Facture PDF</span><span class="pill">Export CSV / XLS</span><span class="pill">Calendrier imprimable</span></div></div>
+</div>
+
+<h3><span class="n">8.2</span>Routage</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:26%">Route</th><th>Écran</th><th style="width:22%">Accès</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">/login</td><td>Connexion</td><td>Public</td></tr>
+    <tr><td class="mono">/dashboard</td><td>Tableau de bord</td><td>Authentifié</td></tr>
+    <tr><td class="mono">/sites-clients</td><td>Clients</td><td>Authentifié</td></tr>
+    <tr><td class="mono">/stockage</td><td>Boxes</td><td>Authentifié</td></tr>
+    <tr><td class="mono">/prestations</td><td>Prestations</td><td>Authentifié</td></tr>
+    <tr><td class="mono">/employes</td><td>Employés</td><td>Authentifié</td></tr>
+    <tr><td class="mono">/vehicules</td><td>Véhicules</td><td>Authentifié</td></tr>
+    <tr><td class="mono">/facturation</td><td>Factures</td><td>Authentifié</td></tr>
+    <tr><td class="mono">/calendrier</td><td>Calendrier</td><td>Authentifié</td></tr>
+    <tr><td class="mono">/rapports</td><td>Rapports</td><td>Authentifié</td></tr>
+    <tr><td class="mono">/profil</td><td>Profil</td><td>Authentifié</td></tr>
+    <tr><td class="mono">/parametres</td><td>Paramètres</td><td>Authentifié</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">8.3</span>Performance et exploitation</h3>
+<div class="grid3">
+  <div class="card"><h4>Build</h4><p>Compilation Vite en assets statiques hashés. Le déploiement consiste à remplacer le contenu du répertoire servi — aucune migration de serveur.</p></div>
+  <div class="card"><h4>Chargement</h4><p>Requêtes PostgREST parallèles au montage des écrans. Le dashboard rafraîchit ses données toutes les 300 secondes via un intervalle.</p></div>
+  <div class="card"><h4>Résilience</h4><p>Repli localStorage sur certains écrans, messages d'erreur et notification « Problème de connexion ». Pas de file d'attente de synchronisation.</p></div>
+</div>
+
+<!-- ============================ 09 DESIGN ============================ -->
+<h2 class="sec">09 · Design system</h2>
+<div class="sec-head">
+  <div class="sec-kicker">Dense, lisible, fait pour être utilisé debout</div>
+  <div class="abstract">L'interface assume sa nature d'outil de travail : tableaux compacts, badges de statut, actions à portée de clic. Le thème sombre est disponible partout et le rendu reste net sur mobile.</div>
+</div>
+
+<h3><span class="n">9.1</span>Fondations</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:24%">Élément</th><th>Choix</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Primitives</strong></td><td>shadcn/ui au-dessus de Radix UI : boutons, dialogues, sélecteurs, tableaux, badges, onglets, menus contextuels.</td></tr>
+    <tr><td><strong>Styles</strong></td><td>Tailwind CSS avec variables de thème ; bascule clair / sombre / système.</td></tr>
+    <tr><td><strong>Iconographie</strong></td><td>Lucide React, taille 16 à 24 px selon le contexte.</td></tr>
+    <tr><td><strong>Typographie</strong></td><td>Inter pour le texte, chiffres tabulaires pour les montants, libellés en français métier.</td></tr>
+    <tr><td><strong>Mouvement</strong></td><td>Framer Motion pour les entrées de page et les transitions de panneaux, durée courte.</td></tr>
+    <tr><td><strong>Tableaux</strong></td><td>TanStack Table : tri, filtre global, pagination, sélection, colonnes d'actions.</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">9.2</span>Code couleur des statuts</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:26%">Sémantique</th><th style="width:20%">Couleur</th><th>Usage</th></tr></thead>
+  <tbody>
+    <tr><td>Succès / disponible</td><td style="color:#127a58"><strong>Vert</strong></td><td>Facture payée, véhicule disponible, employé disponible</td></tr>
+    <tr><td>Attente / occupation</td><td style="color:#96630c"><strong>Orange</strong></td><td>Facture en attente, véhicule en mission, employé occupé</td></tr>
+    <tr><td>Risque / retard</td><td style="color:#a83a55"><strong>Rouge</strong></td><td>Facture en retard, maintenance due, suppression</td></tr>
+    <tr><td>Information</td><td style="color:#0b6b87"><strong>Bleu</strong></td><td>Prestation confirmée, lien, action neutre</td></tr>
+    <tr><td>Neutre / archivé</td><td><strong>Gris</strong></td><td>Facture annulée, employé inactif</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">9.3</span>Responsive et accessibilité</h3>
+<ul class="ticks">
+  <li>Navigation latérale repliable ; sur mobile, elle passe en menu plein écran.</li>
+  <li>Tableaux à défilement horizontal maîtrisé, colonnes secondaires masquées sur petit écran.</li>
+  <li>Cartes d'indicateurs empilées par deux sur mobile.</li>
+  <li>Composants Radix : navigation clavier, focus visible, rôles ARIA corrects.</li>
+  <li>Contrastes à vérifier sur les badges de statut en thème clair.</li>
+</ul>
+
+<!-- ============================ 10 MODE DEMO ============================ -->
+<h2 class="sec">10 · Mode Démo et données de démonstration</h2>
+<div class="sec-head">
+  <div class="sec-kicker">Un choix produit à double tranchant</div>
+  <div class="abstract">Le Mode Démo est activé par défaut. Il permet de découvrir le produit sans base, mais il mélange données factices et données réelles dans la même interface.</div>
+</div>
+
+<h3><span class="n">10.1</span>Fonctionnement</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:28%">Aspect</th><th>Comportement constaté</th></tr></thead>
+  <tbody>
+    <tr><td>Activation</td><td>Active à la première ouverture ; un bandeau « Mode Démo » est affiché sur le tableau de bord.</td></tr>
+    <tr><td>Contenu</td><td>Clients, prestations, factures, véhicules, employés et boxes fictifs, cohérents entre eux.</td></tr>
+    <tr><td>Indicateurs</td><td>Valeurs figées : 12 345 € de chiffre d'affaires, 23 nouveaux clients, 15 prestations, 8 factures en attente.</td></tr>
+    <tr><td>Bascule</td><td>Un contrôle permet de revenir aux données réelles de la base.</td></tr>
+    <tr><td>Persistance</td><td>L'état du mode est conservé côté navigateur ; il ne suit pas l'utilisateur d'un poste à l'autre.</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">10.2</span>Risques</h3>
+<div class="warn">
+  <span class="t">Confusion possible</span>
+  Un utilisateur qui se connecte pour la première fois voit des chiffres plausibles sans rapport avec son activité. Si le bandeau est manqué, il peut croire à un import de données ou à une erreur de facturation. Recommandation : désactiver le mode par défaut en production, ou afficher un filigrane sur chaque écran concerné.
+</div>
+<div class="callout">
+  <span class="t">Valeur réelle</span>
+  Pour une démonstration commerciale, ce mode est un atout : il montre l'application remplie en trois secondes, sans préparer de jeu de données. Il faut simplement le traiter comme un mode de présentation, pas comme un état par défaut.
+</div>
+
+<!-- ============================ 11 SECURITE ============================ -->
+<h2 class="sec">11 · Sécurité, données et conformité</h2>
+<div class="sec-head">
+  <div class="sec-kicker">Ce qui protège — et ce qui ne protège pas</div>
+  <div class="abstract">La clé anonyme Supabase est publique par nature : toute la protection repose sur les politiques Row Level Security. Elles doivent être auditées avant toute mise en production.</div>
+</div>
+
+<h3><span class="n">11.1</span>Surface d'attaque</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:26%">Point</th><th style="width:14%">État</th><th>Analyse</th></tr></thead>
+  <tbody>
+    <tr><td>Authentification</td><td><span class="tag em">Solide</span></td><td>Déléguée à Supabase Auth, mots de passe hachés et gérés par le fournisseur.</td></tr>
+    <tr><td>Autorisation</td><td><span class="tag ro">Faible</span></td><td>Le badge super-admin n'est pas appliqué : tout compte authentifié accède à tout.</td></tr>
+    <tr><td>Isolation des données</td><td><span class="tag ro">Absente</span></td><td>Aucune colonne tenant, donc aucune séparation possible entre entreprises.</td></tr>
+    <tr><td>Politiques RLS</td><td><span class="tag am">À auditer</span></td><td>Non vérifiables depuis le front. À contrôler table par table dans Supabase.</td></tr>
+    <tr><td>Secrets</td><td><span class="tag em">Correct</span></td><td>Seule la clé anonyme est embarquée ; aucune clé de service dans le bundle.</td></tr>
+    <tr><td>Données personnelles</td><td><span class="tag am">À cadrer</span></td><td>Nom, téléphone, e-mail et adresse des clients : base légale, durée de conservation et droit d'accès à documenter.</td></tr>
+    <tr><td>Sauvegarde</td><td><span class="tag am">Fournisseur</span></td><td>Reposent sur Supabase ; aucune procédure de restauration documentée côté projet.</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">11.2</span>Recommandations prioritaires</h3>
+<ul class="ticks">
+  <li>Écrire et tester les politiques RLS sur les sept tables, avec un jeu d'utilisateurs de test.</li>
+  <li>Ajouter <span class="mono">tenant_id</span> et le propager dans toutes les requêtes avant toute commercialisation multi-clients.</li>
+  <li>Appliquer la matrice de permissions côté interface et côté base, pas seulement en badge.</li>
+  <li>Figer les montants d'une facture à l'émission pour garantir l'intégrité comptable.</li>
+  <li>Documenter la conservation des données clients et la procédure d'export / suppression.</li>
+  <li>Retirer les cases 2FA, SMS et WhatsApp tant qu'elles ne sont pas opérationnelles.</li>
+</ul>
+
+<!-- ============================ 12 MATURITE ============================ -->
+<h2 class="sec">12 · Audit de maturité</h2>
+<div class="sec-head">
+  <div class="sec-kicker">Notation par module</div>
+  <div class="abstract">Échelle : <strong>Complet</strong> (utilisable tel quel), <strong>Fonctionnel</strong> (fonctionne, finitions manquantes), <strong>Partiel</strong> (parcours incomplet), <strong>Phase 2</strong> (non implémenté).</div>
+</div>
+
+<h3><span class="n">12.1</span>Notation</h3>
+<table class="tbl">
+  <thead><tr><th style="width:22%">Module</th><th style="width:14%">État</th><th>Ce qui fonctionne</th><th style="width:24%">Ce qui manque</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Tableau de bord</strong></td><td><span class="tag em">Complet</span></td><td>KPI, planning du jour, alertes, bascule démo/réel</td><td>Widgets personnalisables</td></tr>
+    <tr><td><strong>Sites clients</strong></td><td><span class="tag em">Complet</span></td><td>CRUD, recherche, tri, pagination</td><td>Import CSV, détection de doublons</td></tr>
+    <tr><td><strong>Prestations</strong></td><td><span class="tag em">Complet</span></td><td>CRUD, 5 types, 5 statuts, fiche imprimable</td><td>Libellés de statut en liste, devis</td></tr>
+    <tr><td><strong>Stockage</strong></td><td><span class="tag em">Complet</span></td><td>Boxes, occupation, échéances, notes</td><td>Envoi WhatsApp réel, facturation récurrente</td></tr>
+    <tr><td><strong>Employés</strong></td><td><span class="tag em">Complet</span></td><td>Fiches, équipes, compétences, masse salariale</td><td>Pointage, congés, affectation nominative</td></tr>
+    <tr><td><strong>Véhicules</strong></td><td><span class="tag em">Complet</span></td><td>Flotte, états, maintenance, alertes</td><td>Coûts d'exploitation, affectation</td></tr>
+    <tr><td><strong>Facturation</strong></td><td><span class="tag em">Complet</span></td><td>Numérotation, TVA, statuts, impression</td><td>Avoirs, relances, montants figés</td></tr>
+    <tr><td><strong>Calendrier</strong></td><td><span class="tag em">Complet</span></td><td>Vue mois, détail jour, événements libres</td><td>Vues équipe et véhicule</td></tr>
+    <tr><td><strong>Rapports</strong></td><td><span class="tag am">Fonctionnel</span></td><td>5 rapports, KPI 30 jours, exports</td><td>Périodes libres, marge réelle</td></tr>
+    <tr><td><strong>Profil / paramètres</strong></td><td><span class="tag am">Fonctionnel</span></td><td>Compte, mot de passe, thème, langue</td><td>2FA et notifications réellement actives</td></tr>
+    <tr><td><strong>Sécurité / rôles</strong></td><td><span class="tag ro">Partiel</span></td><td>Authentification Supabase, profil chargé</td><td>RLS, permissions, isolation tenant</td></tr>
+    <tr><td><strong>Multi-entreprise</strong></td><td><span class="tag ro">Phase 2</span></td><td>—</td><td>Tenant, rôles fins, portail client</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">12.2</span>Dette technique</h3>
+<div class="grid2">
+  <div class="card">
+    <h4>Dette fonctionnelle</h4>
+    <ul class="cross">
+      <li>Statuts de prestation affichés en clé brute.</li>
+      <li>Mode Démo activé par défaut.</li>
+      <li>Cases de paramètres sans effet.</li>
+      <li>Deux sources de vérité avec le repli localStorage.</li>
+      <li>Pas de contrôle de conflit de planning.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Dette structurelle</h4>
+    <ul class="cross">
+      <li>Absence de dimension tenant.</li>
+      <li>Pas de tests automatisés ni d'intégration continue.</li>
+      <li>Nommage de colonnes incohérent (camelCase isolé).</li>
+      <li>Montants TTC non figés à l'émission.</li>
+      <li>Pas de journal d'audit serveur.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================ 13 ROADMAP ============================ -->
+<h2 class="sec">13 · Feuille de route</h2>
+<div class="sec-head">
+  <div class="sec-kicker">Trois phases, par ordre de valeur</div>
+  <div class="abstract">Phase 1 fiabilise ce qui existe, phase 2 complète le métier, phase 3 ouvre le produit au multi-entreprise.</div>
+</div>
+
+<h3><span class="n">13.1</span>Phase 1 — Fiabiliser (4 à 6 semaines)</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:34%">Livrable</th><th>Critère d'acceptation</th></tr></thead>
+  <tbody>
+    <tr><td>Politiques RLS sur les 7 tables</td><td>Un utilisateur A ne peut lire aucune ligne de l'entreprise B ; test automatisé fourni.</td></tr>
+    <tr><td>Libellés de statut de prestation</td><td>La liste affiche « En cours », jamais <span class="mono">en_cours</span>.</td></tr>
+    <tr><td>Mode Démo désactivé par défaut</td><td>À la première connexion, les chiffres affichés sont ceux de la base.</td></tr>
+    <tr><td>Détection de conflit</td><td>Une prestation qui chevauche une autre pour la même équipe ou le même véhicule déclenche un avertissement.</td></tr>
+    <tr><td>Montants de facture figés</td><td>Modifier le taux de TVA ne change plus une facture déjà émise.</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">13.2</span>Phase 2 — Enrichir (2 à 3 mois)</h3>
+<ul class="ticks">
+  <li>Devis, conversion en prestation et acceptation client.</li>
+  <li>Photos et documents de chantier attachés à la prestation.</li>
+  <li>Pointage des heures réelles et gestion des congés.</li>
+  <li>Coûts véhicules : carburant, entretien, amendes.</li>
+  <li>Relances de facture par e-mail et rappels de garde-meuble.</li>
+  <li>Affectation nominative des employés et des véhicules à chaque prestation.</li>
+</ul>
+
+<h3><span class="n">13.3</span>Phase 3 — Passer à l'échelle (3 à 6 mois)</h3>
+<ul class="ticks">
+  <li>Isolation par tenant et rôles fins (direction, exploitation, admin, terrain).</li>
+  <li>Portail client : suivi de la prestation, documents, factures.</li>
+  <li>Application mobile terrain avec fiche de mission hors ligne.</li>
+  <li>Tableaux de bord par agence et consolidation groupe.</li>
+  <li>API publique et webhooks pour la comptabilité.</li>
+</ul>
+
+<!-- ============================ 14 EXPLOITATION ============================ -->
+<h2 class="sec">14 · Exploitation et déploiement</h2>
+<div class="sec-head">
+  <div class="sec-kicker">Mettre en ligne et tenir en ligne</div>
+  <div class="abstract">Le produit est un site statique adossé à Supabase : le déploiement est simple, la vigilance porte sur la base et les sauvegardes.</div>
+</div>
+
+<h3><span class="n">14.1</span>Environnements</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:22%">Environnement</th><th style="width:30%">Hébergement</th><th>Usage</th></tr></thead>
+  <tbody>
+    <tr><td>Production</td><td>Hostinger — site statique</td><td>Usage réel des utilisateurs</td></tr>
+    <tr><td>Recette</td><td>Hostinger — sous-domaine ou répertoire dédié</td><td>Validation avant mise en production</td></tr>
+    <tr><td>Base</td><td>Supabase — projet unique</td><td>Une base par environnement recommandée</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">14.2</span>Procédure de mise en production</h3>
+<ol style="font-size:9pt;line-height:1.7;padding-left:18px">
+  <li>Exécuter <span class="mono">npm run build</span> et vérifier l'absence d'erreur TypeScript.</li>
+  <li>Contrôler que seules les variables publiques sont présentes dans le bundle.</li>
+  <li>Tester les parcours critiques sur l'environnement de recette.</li>
+  <li>Appliquer les migrations Supabase dans l'ordre, avec sauvegarde préalable.</li>
+  <li>Déployer les assets et vider le cache du CDN si applicable.</li>
+  <li>Vérifier la connexion, le chargement du dashboard et l'émission d'une facture test.</li>
+</ol>
+
+<h3><span class="n">14.3</span>Checklist de production</h3>
+<ul class="chk">
+  <li>Politiques RLS écrites et testées sur les 7 tables.</li>
+  <li>Mode Démo désactivé par défaut.</li>
+  <li>Sauvegarde Supabase planifiée et restauration testée.</li>
+  <li>Compte super-admin nominatif, mots de passe uniques.</li>
+  <li>Taux de TVA et numérotation de facture validés avec la comptabilité.</li>
+  <li>Mentions légales et politique de confidentialité publiées.</li>
+  <li>Procédure de suppression d'un client documentée.</li>
+  <li>Supervision : alerte si le site ou la base ne répond plus.</li>
+</ul>
+
+<!-- ============================ 15 VIDEO ============================ -->
+<h2 class="sec">15 · Guide d'intégration de la vidéo</h2>
+<div class="sec-head">
+  <div class="sec-kicker">La démonstration en trois minutes</div>
+  <div class="abstract">La page descriptive réserve un cadre 16:9 prêt à recevoir une iframe. Ce chapitre fournit le storyboard et le script pour produire la vidéo.</div>
+</div>
+
+<h3><span class="n">15.1</span>Spécifications techniques</h3>
+<table class="tbl compact">
+  <tbody>
+    <tr><td style="width:30%"><strong>Format</strong></td><td>MP4 H.264, 1920 × 1080, 30 images/seconde</td></tr>
+    <tr><td><strong>Durée cible</strong></td><td>2 min 45 à 3 min 15</td></tr>
+    <tr><td><strong>Intégration</strong></td><td>Iframe 16:9 dans le bloc <span class="mono">.video-wrap</span>, attributs <span class="mono">allowfullscreen</span> et <span class="mono">loading="lazy"</span></td></tr>
+    <tr><td><strong>Audio</strong></td><td>Voix off française, musique instrumentale discrète, sous-titres français</td></tr>
+    <tr><td><strong>Données</strong></td><td>Utiliser le Mode Démo ou un jeu de démonstration cohérent, jamais de données client réelles</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">15.2</span>Storyboard</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:8%">Plan</th><th style="width:20%">Écran</th><th>Action filmée</th><th style="width:26%">Message</th></tr></thead>
+  <tbody>
+    <tr><td>01</td><td>Dashboard</td><td>Survol des quatre indicateurs, puis du planning du jour</td><td>« Voilà votre journée, en un écran. »</td></tr>
+    <tr><td>02</td><td>Sites clients</td><td>Recherche d'un client, ouverture de la fiche</td><td>« Le client n'est saisi qu'une fois. »</td></tr>
+    <tr><td>03</td><td>Prestations</td><td>Création d'un déménagement, choix du type et de la date</td><td>« La prestation relie tout le reste. »</td></tr>
+    <tr><td>04</td><td>Calendrier</td><td>Navigation dans le mois, ouverture du détail du jour</td><td>« La semaine se lit d'un coup d'œil. »</td></tr>
+    <tr><td>05</td><td>Employés</td><td>Filtre des disponibles, ouverture d'une fiche</td><td>« On sait qui est libre et qui sait faire quoi. »</td></tr>
+    <tr><td>06</td><td>Véhicules</td><td>État de la flotte, alerte de maintenance</td><td>« Le camion ne tombe plus en panne par surprise. »</td></tr>
+    <tr><td>07</td><td>Stockage</td><td>Assignation d'un box à un client, échéance</td><td>« Le garde-meuble devient un revenu suivi. »</td></tr>
+    <tr><td>08</td><td>Facturation</td><td>Création d'une facture, calcul du TTC, impression</td><td>« La facture part le jour du déménagement. »</td></tr>
+    <tr><td>09</td><td>Rapports</td><td>Résumé financier, changement de rapport, export</td><td>« Les chiffres qui déclenchent une décision. »</td></tr>
+    <tr><td>10</td><td>Mobile</td><td>Dashboard sur téléphone, menu replié</td><td>« L'essentiel reste lisible sur le terrain. »</td></tr>
+    <tr><td>11</td><td>Carton final</td><td>Logo DSL et accroche</td><td>« Du premier appel à la facture. »</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">15.3</span>Script voix off (extrait)</h3>
+<div class="code">« Une entreprise de déménagement, c'est des clients, des équipes,
+des camions, des boxes et des factures. Souvent, tout cela vit
+dans cinq outils différents.
+
+DSL-Déménagements réunit ces cinq outils en un seul.
+
+Le client entre une fois. La prestation se planifie. L'équipe et le
+véhicule se mobilisent. Le box s'assigne. La facture se génère.
+
+Et le soir, le dirigeant n'a plus à reconstituer sa journée :
+elle est déjà là. »</div>
+
+<!-- ============================ 16 ANNEXES ============================ -->
+<h2 class="sec">16 · Annexes</h2>
+<div class="sec-head">
+  <div class="sec-kicker">Références</div>
+  <div class="abstract">Routes, dépendances principales, inventaire des captures et glossaire métier.</div>
+</div>
+
+<h3><span class="n">16.1</span>Dépendances principales</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:34%">Paquet</th><th>Usage</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">react / react-dom</td><td>Interface</td></tr>
+    <tr><td class="mono">vite</td><td>Build et serveur de développement</td></tr>
+    <tr><td class="mono">typescript</td><td>Typage statique</td></tr>
+    <tr><td class="mono">tailwindcss</td><td>Styles utilitaires</td></tr>
+    <tr><td class="mono">@radix-ui/*</td><td>Primitives accessibles</td></tr>
+    <tr><td class="mono">@tanstack/react-table</td><td>Tableaux triables et paginés</td></tr>
+    <tr><td class="mono">@fullcalendar/*</td><td>Calendrier</td></tr>
+    <tr><td class="mono">recharts</td><td>Graphiques des rapports</td></tr>
+    <tr><td class="mono">react-hook-form / zod</td><td>Formulaires et validation</td></tr>
+    <tr><td class="mono">date-fns</td><td>Formatage des dates en français</td></tr>
+    <tr><td class="mono">@supabase/supabase-js</td><td>Auth et accès aux données</td></tr>
+    <tr><td class="mono">framer-motion</td><td>Animations d'interface</td></tr>
+    <tr><td class="mono">lucide-react</td><td>Icônes</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">16.2</span>Inventaire des captures</h3>
+<table class="tbl compact">
+  <thead><tr><th style="width:34%">Fichier</th><th>Écran</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">01-dashboard.jpg</td><td>Tableau de bord</td></tr>
+    <tr><td class="mono">02-sites-clients.jpg</td><td>Sites clients</td></tr>
+    <tr><td class="mono">03-stockage.jpg</td><td>Stockage</td></tr>
+    <tr><td class="mono">04-prestations.jpg</td><td>Prestations</td></tr>
+    <tr><td class="mono">05-employes.jpg</td><td>Employés</td></tr>
+    <tr><td class="mono">06-vehicules.jpg</td><td>Véhicules</td></tr>
+    <tr><td class="mono">07-facturation.jpg</td><td>Facturation</td></tr>
+    <tr><td class="mono">08-calendrier.jpg</td><td>Calendrier</td></tr>
+    <tr><td class="mono">09-rapports.jpg</td><td>Rapports</td></tr>
+    <tr><td class="mono">10-profil.jpg</td><td>Profil</td></tr>
+    <tr><td class="mono">11-parametres.jpg</td><td>Paramètres</td></tr>
+    <tr><td class="mono">12-login.jpg</td><td>Connexion</td></tr>
+    <tr><td class="mono">13-mobile-dashboard.jpg</td><td>Vue mobile</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">16.3</span>Glossaire</h3>
+<table class="tbl compact">
+  <tbody>
+    <tr><td style="width:26%"><strong>Prestation</strong></td><td>Intervention planifiée chez un client : déménagement, transfert, garde-meuble ou location de monte-meuble.</td></tr>
+    <tr><td><strong>Garde-meuble</strong></td><td>Service de stockage du mobilier du client dans un box, sur une durée contractuelle.</td></tr>
+    <tr><td><strong>Monte-meuble</strong></td><td>Engin de levage permettant de faire passer du mobilier par une fenêtre ou un balcon.</td></tr>
+    <tr><td><strong>Box</strong></td><td>Compartiment de stockage identifié, rattaché à une ville et à un volume.</td></tr>
+    <tr><td><strong>Manutentionnaire</strong></td><td>Membre d'équipe affecté au portage et au chargement.</td></tr>
+    <tr><td><strong>Chef d'équipe</strong></td><td>Responsable du chantier sur place, destinataire de la fiche de prestation.</td></tr>
+    <tr><td><strong>TTC</strong></td><td>Montant toutes taxes comprises, calculé à partir du HT et du taux de TVA.</td></tr>
+    <tr><td><strong>RLS</strong></td><td>Row Level Security : politiques PostgreSQL qui filtrent les lignes visibles par utilisateur.</td></tr>
+  </tbody>
+</table>
+
+<h3><span class="n">16.4</span>Captures de l'application</h3>
+<p class="small">Les treize captures ci-dessous proviennent de la version déployée, alimentée par un jeu de démonstration cohérent. Elles illustrent l'état réel de l'interface, sans retouche.</p>
+<div class="gallery">
+  <figure><img src="assets/01-dashboard.jpg" alt="Tableau de bord" /><figcaption>Tableau de bord — KPI, planning du jour, alertes</figcaption></figure>
+  <figure><img src="assets/02-sites-clients.jpg" alt="Sites clients" /><figcaption>Sites clients — liste, recherche, actions</figcaption></figure>
+  <figure><img src="assets/03-stockage.jpg" alt="Stockage" /><figcaption>Stockage — boxes, occupation, échéances</figcaption></figure>
+  <figure><img src="assets/04-prestations.jpg" alt="Prestations" /><figcaption>Prestations — liste datée et statuts</figcaption></figure>
+  <figure><img src="assets/05-employes.jpg" alt="Employés" /><figcaption>Employés — effectif, équipes, disponibilité</figcaption></figure>
+  <figure><img src="assets/06-vehicules.jpg" alt="Véhicules" /><figcaption>Véhicules — flotte, état, maintenance</figcaption></figure>
+  <figure><img src="assets/07-facturation.jpg" alt="Facturation" /><figcaption>Facturation — numéros, TTC, statuts de paiement</figcaption></figure>
+  <figure><img src="assets/08-calendrier.jpg" alt="Calendrier" /><figcaption>Calendrier — vue mois et détail du jour</figcaption></figure>
+  <figure><img src="assets/09-rapports.jpg" alt="Rapports" /><figcaption>Rapports — KPI 30 jours, graphiques, export</figcaption></figure>
+  <figure><img src="assets/10-profil.jpg" alt="Profil" /><figcaption>Profil — compte et sécurité</figcaption></figure>
+  <figure><img src="assets/11-parametres.jpg" alt="Paramètres" /><figcaption>Paramètres — notifications, apparence, langue</figcaption></figure>
+  <figure><img src="assets/12-login.jpg" alt="Connexion" /><figcaption>Connexion — authentification Supabase</figcaption></figure>
+  <figure><img src="assets/13-mobile-dashboard.jpg" alt="Vue mobile" /><figcaption>Vue mobile — 414 px, navigation repliée</figcaption></figure>
+</div>
+
+<div class="callout" style="margin-top:16px">
+  <span class="t">Traçabilité</span>
+  Document établi le 5 novembre 2026 à partir de l'analyse du bundle déployé sur <span class="mono">blueviolet-fox-642747.hostingersite.com</span>, des routes et des tables réellement présentes, et de captures réalisées sur la version en ligne avec un jeu de démonstration. Les libellés cités sont ceux de l'interface.
+</div>
+
+</body>
+</html>
