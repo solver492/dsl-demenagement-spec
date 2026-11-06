@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>DSL-Déménagements — Spécification fonctionnelle & technique</title>
 <meta name="author" content="DSL Studio" />
 <meta name="description" content="Spécification fonctionnelle et technique de l'ERP de déménagement DSL-Déménagements." />
@@ -201,6 +202,67 @@
   .chk { list-style: none; padding: 0; margin: 4px 0; }
   .chk li { position: relative; padding-left: 16px; margin-bottom: 3px; font-size: 8.5pt; }
   .chk li::before { content: "☐"; position: absolute; left: 0; top: -1px; color: #1f6feb; }
+
+  /* ================= ADAPTATIF ÉCRAN (mobile / tablette / desktop) ================= */
+  @media screen {
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body {
+      padding: clamp(14px, 3vw, 32px) clamp(14px, 4vw, 40px) clamp(32px, 6vw, 64px);
+      background: #ffffff;
+    }
+    body > * { width: 100%; max-width: 980px; margin-left: auto; margin-right: auto; }
+    img { max-width: 100%; height: auto; }
+    .cover {
+      height: auto; min-height: 0; padding: clamp(22px, 5vw, 36px);
+      border-radius: 14px; margin-bottom: clamp(22px, 4vw, 40px);
+    }
+    .cover-mid { margin-top: clamp(24px, 5vw, 46px); }
+    .cover h1 { font-size: clamp(25pt, 5.4vw, 31pt); }
+    .cover .sub { font-size: clamp(10.5pt, 2.2vw, 12pt); max-width: 100%; }
+    .cover .sub2 { max-width: 100%; }
+    .cover-meta { max-width: 100%; }
+    .cover-bottom { position: static; margin-top: clamp(22px, 5vw, 36px); }
+    .sec-head .abstract { max-width: 100%; }
+    h2.sec { font-size: clamp(16pt, 3.6vw, 19pt); margin-top: clamp(30px, 5vw, 48px); }
+    .lead { font-size: clamp(10pt, 2.2vw, 10.6pt); }
+    .tbl-wrap { width: 100%; max-width: 980px; margin-left: auto; margin-right: auto; min-width: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .code { overflow-x: auto; }
+    .mono, table.tbl td, table.tbl th { overflow-wrap: anywhere; }
+    .figcap { flex-wrap: wrap; }
+  }
+
+  @media screen and (max-width: 820px) {
+    body { font-size: 10.6pt; }
+    .kpis, .grid2, .grid3, .duo, .gallery, .sig, .cover-meta { grid-template-columns: minmax(0, 1fr); }
+    .flow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .layer, .kv { grid-template-columns: minmax(0, 1fr); gap: 1px 0; }
+    .grid2 > *, .grid3 > *, .duo > *, .kpis > *, .gallery > *, .sig > *, .cover-meta > * { min-width: 0; max-width: 100%; }
+    .card { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+    p, li, h1, h2, h3, h4, .card, .lead { overflow-wrap: anywhere; }
+    .layer .k { padding-top: 0; }
+    .toc-row { grid-template-columns: 9mm minmax(0, 1fr); }
+    .toc-row .flag { grid-column: 2; }
+    .cover-bottom { flex-direction: column; gap: 5px; }
+    table.tbl { min-width: 540px; }
+    table.tbl.tight, table.tbl.compact { min-width: 460px; }
+    h3 { font-size: 12.4pt; }
+    h4 { font-size: 10.2pt; }
+    .mod-head h3 { font-size: 14pt; }
+    .figcap { flex-direction: column; gap: 2px; }
+    .callout, .warn, .ok, ul.ticks li, ul.cross li { font-size: 9.2pt; }
+  }
+
+  @media screen and (max-width: 440px) {
+    body { padding-left: 12px; padding-right: 12px; }
+    .cover { padding: 20px 16px; border-radius: 10px; }
+    .cover h1 { font-size: 23pt; }
+    .cover h1 br { display: none; }
+    .flow { grid-template-columns: minmax(0, 1fr); }
+    .mark { width: 34px; height: 34px; line-height: 34px; font-size: 16pt; }
+    table.tbl { min-width: 460px; }
+    table.tbl.tight, table.tbl.compact { min-width: 400px; }
+    .kpi .n { font-size: 18pt; }
+  }
 </style>
 </head>
 <body>
@@ -281,7 +343,7 @@
 </div>
 
 <h3><span class="n">1.1</span>Fiche d'identité du produit</h3>
-<table class="tbl">
+<div class="tbl-wrap"><table class="tbl">
   <tbody>
     <tr><td style="width:34%"><strong>Nom affiché dans l'application</strong></td><td>DSL-Déménagements</td></tr>
     <tr><td><strong>Nature</strong></td><td>Application web mono-page (SPA) d'exploitation, avec base gérée</td></tr>
@@ -297,7 +359,7 @@
     <tr><td><strong>Volumétrie</strong></td><td>11 écrans métier + connexion · 7 tables · 5 types de prestation · 6 catégories de véhicules · 5 rapports</td></tr>
     <tr><td><strong>État</strong></td><td>Application d'exploitation complète et utilisable en mono-entreprise — multi-tenant, RLS et contrôles de conflit restent à faire</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">1.2</span>Chiffres clés</h3>
 <div class="kpis">
@@ -353,7 +415,7 @@
 </div>
 
 <h3><span class="n">2.1</span>Les douleurs du terrain</h3>
-<table class="tbl">
+<div class="tbl-wrap"><table class="tbl">
   <thead><tr><th style="width:26%">Douleur</th><th>Manifestation concrète</th><th style="width:30%">Réponse apportée</th></tr></thead>
   <tbody>
     <tr><td><strong>Double saisie</strong></td><td>Le client est créé dans le tableur, recopié dans le devis, puis dans la facture. Une correction n'est jamais propagée.</td><td>Une fiche client unique réutilisée par les prestations, les factures et les boxes.</td></tr>
@@ -362,7 +424,7 @@
     <tr><td><strong>Facturation tardive</strong></td><td>La facture part une semaine après le déménagement, quand elle part.</td><td>Facture rattachée à la prestation, numérotée et imprimable immédiatement.</td></tr>
     <tr><td><strong>Pilotage à l'aveugle</strong></td><td>Le dirigeant découvre son chiffre d'affaires en fin de mois.</td><td>Tableau de bord quotidien et cinq rapports exportables.</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">2.2</span>La promesse</h3>
 <p class="lead">Un seul outil, du premier appel à l'encaissement : le client entre une fois, la prestation se planifie, l'équipe et le véhicule se mobilisent, le box s'assigne, la facture se génère et le rapport se lit. Aucune information ne devrait avoir à être saisie deux fois.</p>
@@ -382,7 +444,7 @@
 </div>
 
 <h3><span class="n">3.1</span>Personas</h3>
-<table class="tbl">
+<div class="tbl-wrap"><table class="tbl">
   <thead><tr><th style="width:20%">Persona</th><th style="width:24%">Usage principal</th><th>Écrans fréquents</th><th style="width:20%">Besoin dominant</th></tr></thead>
   <tbody>
     <tr><td><strong>Gérant / direction</strong></td><td>Piloter l'activité et arbitrer</td><td>Tableau de bord, rapports, facturation</td><td>Voir la marge et les impayés</td></tr>
@@ -390,10 +452,10 @@
     <tr><td><strong>Assistant administratif</strong></td><td>Facturer et relancer</td><td>Clients, facturation, stockage</td><td>Ne rien oublier à facturer</td></tr>
     <tr><td><strong>Chef d'équipe</strong></td><td>Exécuter sur le terrain</td><td>Fiche de prestation imprimée</td><td>Savoir où, quand, avec qui</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">3.2</span>Matrice des droits</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th>Capacité</th><th>Super-admin</th><th>Utilisateur authentifié</th><th>Non authentifié</th></tr></thead>
   <tbody>
     <tr><td>Accéder au tableau de bord et aux modules</td><td>Oui</td><td>Oui</td><td>Redirigé vers <span class="mono">/login</span></td></tr>
@@ -404,7 +466,7 @@
     <tr><td>Gérer les comptes et les rôles</td><td>Indicateur présent, écran absent</td><td>Non</td><td>Non</td></tr>
     <tr><td>Cloisonner les données par entreprise</td><td colspan="3" style="color:#a83a55">Non implémenté : toutes les lignes sont visibles par tout compte authentifié.</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <div class="warn">
   <span class="t">Écart entre le discours et le code</span>
@@ -419,7 +481,7 @@
 </div>
 
 <h3><span class="n">4.1</span>Navigation</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:22%">Entrée de menu</th><th style="width:24%">Route</th><th>Rôle dans le flux</th><th style="width:18%">Table principale</th></tr></thead>
   <tbody>
     <tr><td>Dashboard</td><td class="mono">/dashboard</td><td>Synthèse du jour, alertes, accès rapide</td><td>agrégats</td></tr>
@@ -435,7 +497,7 @@
     <tr><td>Paramètres</td><td class="mono">/parametres</td><td>Notifications, apparence, langue</td><td class="mono">profiles</td></tr>
     <tr><td>Connexion</td><td class="mono">/login</td><td>Porte d'entrée</td><td class="mono">auth</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">4.2</span>Cycle de vie de la donnée</h3>
 <div class="flow">
@@ -474,7 +536,7 @@
   <li>Rafraîchissement automatique des données toutes les cinq minutes.</li>
 </ul>
 <h4>Règles de calcul</h4>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th>Indicateur</th><th>Source</th><th>Règle</th></tr></thead>
   <tbody>
     <tr><td>Chiffre d'affaires (mois)</td><td class="mono">factures</td><td>Somme des montants TTC des factures dont la date d'émission tombe dans le mois courant.</td></tr>
@@ -482,7 +544,7 @@
     <tr><td>Prestations planifiées</td><td class="mono">prestations</td><td>Prestations dont la date est comprise dans la semaine courante.</td></tr>
     <tr><td>Factures en attente</td><td class="mono">factures</td><td>Statut « En attente » ou « Partiellement payée ».</td></tr>
   </tbody>
-</table>
+</table></div>
 <div class="warn">
   <span class="t">Limite constatée</span>
   En Mode Démo, les quatre indicateurs affichent des valeurs figées (12 345 €, 23, 15, 8) et le planning du jour peut rester vide alors que des prestations de démonstration existent. Le bandeau « Mode Démo » est le seul signal : un utilisateur peut prendre ces chiffres pour sa réalité.
@@ -505,7 +567,7 @@
   <li>Compteur de clients en tête de page.</li>
 </ul>
 <h4>Dictionnaire de champs — <span class="mono">clients</span></h4>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:22%">Champ</th><th style="width:16%">Type</th><th>Contenu</th><th style="width:14%">Obligatoire</th></tr></thead>
   <tbody>
     <tr><td class="mono">nom</td><td>texte</td><td>Raison sociale ou nom du particulier</td><td>Oui</td></tr>
@@ -515,7 +577,7 @@
     <tr><td class="mono">adresse</td><td>texte</td><td>Adresse complète du site</td><td>Oui</td></tr>
     <tr><td class="mono">ville</td><td>texte</td><td>Ville du site, utilisée pour les boxes</td><td>Non</td></tr>
   </tbody>
-</table>
+</table></div>
 <div class="verdict"><strong>Verdict.</strong> Module complet et solide. Deux manques : pas d'import CSV pour reprendre un fichier existant, pas de détection de doublons sur le nom ou le téléphone.</div>
 
 <!-- MODULE 3 -->
@@ -547,7 +609,7 @@
   </div>
   <div class="card">
     <h4>Statuts du cycle de vie</h4>
-    <table class="tbl tight" style="margin:0">
+    <div class="tbl-wrap"><table class="tbl tight" style="margin:0">
       <tbody>
         <tr><td class="mono">confirmee</td><td>Confirmée</td></tr>
         <tr><td class="mono">en_cours</td><td>En cours</td></tr>
@@ -555,11 +617,11 @@
         <tr><td class="mono">reportee</td><td>Reportée</td></tr>
         <tr><td class="mono">annulee</td><td>Annulée</td></tr>
       </tbody>
-    </table>
+    </table></div>
   </div>
 </div>
 <h4>Dictionnaire de champs — <span class="mono">prestations</span></h4>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:26%">Champ</th><th style="width:14%">Type</th><th>Contenu</th></tr></thead>
   <tbody>
     <tr><td class="mono">client_id</td><td>uuid</td><td>Référence vers <span class="mono">clients</span></td></tr>
@@ -574,7 +636,7 @@
     <tr><td class="mono">montant_ht</td><td>numérique</td><td>Montant hors taxes</td></tr>
     <tr><td class="mono">details_prestation</td><td>texte long</td><td>Contraintes, volume, étage, ascenseur</td></tr>
   </tbody>
-</table>
+</table></div>
 <div class="warn">
   <span class="t">Défaut d'affichage identifié</span>
   Dans la liste, la colonne Statut rend la clé brute de la base (<span class="mono">en_cours</span>, <span class="mono">terminee</span>) au lieu du libellé français. Le détail affiche parfois le libellé correct : la table de correspondance n'est pas appliquée au même endroit. Correction à prévoir en phase 1.
@@ -597,7 +659,7 @@
   <li>Indicateur d'occupation globale du parc.</li>
 </ul>
 <h4>Dictionnaire de champs — <span class="mono">box_stockage</span></h4>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:26%">Champ</th><th style="width:14%">Type</th><th>Contenu</th></tr></thead>
   <tbody>
     <tr><td class="mono">nom_box</td><td>texte</td><td>Identifiant lisible du box (Box A-01)</td></tr>
@@ -609,7 +671,7 @@
     <tr><td class="mono">notifications_active</td><td>booléen</td><td>Active le rappel de fin de contrat</td></tr>
     <tr><td class="mono">statut</td><td>énumération</td><td>Vide · Occupé · Réservé</td></tr>
   </tbody>
-</table>
+</table></div>
 <div class="verdict"><strong>Verdict.</strong> Le module est fonctionnel et bien pensé. L'envoi WhatsApp est un lien prérempli, pas une notification automatique : le libellé doit être corrigé ou l'intégration réalisée.</div>
 
 <!-- MODULE 5 -->
@@ -629,12 +691,12 @@
   <li>Compteurs : effectif total, disponibles, occupés, en congé.</li>
 </ul>
 <h4>Postes et disponibilités</h4>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:40%">Postes</th><th>Disponibilités</th></tr></thead>
   <tbody>
     <tr><td>Chef d'équipe · Manutentionnaire · Chauffeur · Déménageur · Coordinateur · Assistant · Superviseur</td><td>Disponible · Occupé · En congé</td></tr>
   </tbody>
-</table>
+</table></div>
 <div class="verdict"><strong>Verdict.</strong> Bonne base RH. Il manque le pointage des heures réelles, la gestion des congés et le lien direct entre une prestation et les employés nominativement affectés : aujourd'hui la prestation ne stocke qu'un nombre.</div>
 
 <!-- MODULE 6 -->
@@ -711,7 +773,7 @@
 </div>
 <p><strong>Objectif.</strong> Passer du suivi quotidien à la décision : où part le chiffre d'affaires, quelles équipes sont surchargées, quels véhicules dorment.</p>
 <h4>Les cinq rapports</h4>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:26%">Rapport</th><th>Contenu</th><th style="width:22%">Décision associée</th></tr></thead>
   <tbody>
     <tr><td><strong>Résumé financier</strong></td><td>Chiffre d'affaires, encaissements, impayés sur 30 jours</td><td>Relancer ou arbitrer la trésorerie</td></tr>
@@ -720,7 +782,7 @@
     <tr><td><strong>Utilisation des véhicules</strong></td><td>Taux de disponibilité, missions par catégorie</td><td>Décider d'un achat ou d'une location</td></tr>
     <tr><td><strong>Distribution des manutentionnaires</strong></td><td>Charge par équipe et par poste</td><td>Rééquilibrer les équipes</td></tr>
   </tbody>
-</table>
+</table></div>
 <h4>Exports</h4>
 <p>Trois sorties sont proposées pour chaque rapport : <strong>CSV</strong> (téléchargement), <strong>Excel</strong> (fichier XLS) et <strong>PDF</strong> (impression navigateur). Les indicateurs se recalculent sur une fenêtre glissante de 30 jours et une vue comparative par site est disponible.</p>
 <div class="verdict"><strong>Verdict.</strong> Le module le plus mature après la facturation. Il manque les périodes personnalisées, la marge réelle (coûts vs recettes) et l'export planifié par e-mail.</div>
@@ -771,7 +833,7 @@
 </div>
 
 <h3><span class="n">6.1</span>Parcours commercial — du premier appel à la prestation</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:8%">Étape</th><th style="width:24%">Écran</th><th>Action</th><th style="width:26%">Résultat attendu</th></tr></thead>
   <tbody>
     <tr><td>1</td><td>Sites Clients</td><td>Rechercher le client par téléphone ou nom. S'il n'existe pas, créer la fiche avec l'adresse exacte du site.</td><td>Fiche client unique, réutilisable partout.</td></tr>
@@ -779,7 +841,7 @@
     <tr><td>3</td><td>Calendrier</td><td>Vérifier visuellement la charge de la semaine et l'absence de doublon apparent.</td><td>Confirmation de la date au client.</td></tr>
     <tr><td>4</td><td>Prestations</td><td>Imprimer la fiche de prestation.</td><td>Document papier pour le chef d'équipe.</td></tr>
   </tbody>
-</table>
+</table></div>
 <p class="note">Friction : la vérification de disponibilité réelle de l'équipe et du véhicule reste manuelle. L'application ne bloque pas une double affectation.</p>
 
 <h3><span class="n">6.2</span>Parcours exploitation — la journée du responsable</h3>
@@ -826,7 +888,7 @@
 </div>
 
 <h3><span class="n">7.2</span>Dictionnaire des tables</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:18%">Table</th><th style="width:34%">Champs principaux</th><th>Rôle</th></tr></thead>
   <tbody>
     <tr><td><strong class="mono">clients</strong></td><td>id, nom, contact, telephone, email, adresse, ville, created_at</td><td>Référentiel des clients et de leurs sites d'intervention.</td></tr>
@@ -837,10 +899,10 @@
     <tr><td><strong class="mono">box_stockage</strong></td><td>id, nom_box, ville, espace, client_id, date_debut, date_fin, notifications_active, statut, notes</td><td>Garde-meuble et échéances de contrat.</td></tr>
     <tr><td><strong class="mono">profiles</strong></td><td>id, full_name, avatar_url, phone, is_super_admin, username</td><td>Profil applicatif lié au compte d'authentification.</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">7.3</span>Anomalies de modélisation</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:30%">Constat</th><th>Conséquence</th><th style="width:26%">Correction recommandée</th></tr></thead>
   <tbody>
     <tr><td>Dénomination mixte <span class="mono">prochaineMaintenance</span> en camelCase au milieu de colonnes snake_case</td><td>Confusion dans les requêtes et les exports</td><td>Renommer en <span class="mono">prochaine_maintenance</span> avec migration</td></tr>
@@ -850,7 +912,7 @@
     <tr><td>Pas de table de devis ni de documents</td><td>Le cycle commercial amont est hors outil</td><td>Ajouter <span class="mono">devis</span> et <span class="mono">documents</span></td></tr>
     <tr><td>Montant TTC recalculé, jamais stocké</td><td>Une facture émise peut changer de montant</td><td>Figer les montants à l'émission</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">7.4</span>Persistance et mode dégradé</h3>
 <p>La persistance nominale est assurée par Supabase (PostgreSQL + PostgREST). En cas d'indisponibilité de la base, plusieurs écrans retombent sur <span class="mono">localStorage</span> : les données restent visibles sur le poste mais ne sont ni partagées ni sauvegardées. Ce comportement est pratique pour une démonstration hors ligne ; en production, il crée deux sources de vérité et doit être désactivé ou explicitement signalé à l'utilisateur.</p>
@@ -873,7 +935,7 @@
 </div>
 
 <h3><span class="n">8.2</span>Routage</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:26%">Route</th><th>Écran</th><th style="width:22%">Accès</th></tr></thead>
   <tbody>
     <tr><td class="mono">/login</td><td>Connexion</td><td>Public</td></tr>
@@ -889,7 +951,7 @@
     <tr><td class="mono">/profil</td><td>Profil</td><td>Authentifié</td></tr>
     <tr><td class="mono">/parametres</td><td>Paramètres</td><td>Authentifié</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">8.3</span>Performance et exploitation</h3>
 <div class="grid3">
@@ -906,7 +968,7 @@
 </div>
 
 <h3><span class="n">9.1</span>Fondations</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:24%">Élément</th><th>Choix</th></tr></thead>
   <tbody>
     <tr><td><strong>Primitives</strong></td><td>shadcn/ui au-dessus de Radix UI : boutons, dialogues, sélecteurs, tableaux, badges, onglets, menus contextuels.</td></tr>
@@ -916,10 +978,10 @@
     <tr><td><strong>Mouvement</strong></td><td>Framer Motion pour les entrées de page et les transitions de panneaux, durée courte.</td></tr>
     <tr><td><strong>Tableaux</strong></td><td>TanStack Table : tri, filtre global, pagination, sélection, colonnes d'actions.</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">9.2</span>Code couleur des statuts</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:26%">Sémantique</th><th style="width:20%">Couleur</th><th>Usage</th></tr></thead>
   <tbody>
     <tr><td>Succès / disponible</td><td style="color:#127a58"><strong>Vert</strong></td><td>Facture payée, véhicule disponible, employé disponible</td></tr>
@@ -928,7 +990,7 @@
     <tr><td>Information</td><td style="color:#0b6b87"><strong>Bleu</strong></td><td>Prestation confirmée, lien, action neutre</td></tr>
     <tr><td>Neutre / archivé</td><td><strong>Gris</strong></td><td>Facture annulée, employé inactif</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">9.3</span>Responsive et accessibilité</h3>
 <ul class="ticks">
@@ -947,7 +1009,7 @@
 </div>
 
 <h3><span class="n">10.1</span>Fonctionnement</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:28%">Aspect</th><th>Comportement constaté</th></tr></thead>
   <tbody>
     <tr><td>Activation</td><td>Active à la première ouverture ; un bandeau « Mode Démo » est affiché sur le tableau de bord.</td></tr>
@@ -956,7 +1018,7 @@
     <tr><td>Bascule</td><td>Un contrôle permet de revenir aux données réelles de la base.</td></tr>
     <tr><td>Persistance</td><td>L'état du mode est conservé côté navigateur ; il ne suit pas l'utilisateur d'un poste à l'autre.</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">10.2</span>Risques</h3>
 <div class="warn">
@@ -976,7 +1038,7 @@
 </div>
 
 <h3><span class="n">11.1</span>Surface d'attaque</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:26%">Point</th><th style="width:14%">État</th><th>Analyse</th></tr></thead>
   <tbody>
     <tr><td>Authentification</td><td><span class="tag em">Solide</span></td><td>Déléguée à Supabase Auth, mots de passe hachés et gérés par le fournisseur.</td></tr>
@@ -987,7 +1049,7 @@
     <tr><td>Données personnelles</td><td><span class="tag am">À cadrer</span></td><td>Nom, téléphone, e-mail et adresse des clients : base légale, durée de conservation et droit d'accès à documenter.</td></tr>
     <tr><td>Sauvegarde</td><td><span class="tag am">Fournisseur</span></td><td>Reposent sur Supabase ; aucune procédure de restauration documentée côté projet.</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">11.2</span>Recommandations prioritaires</h3>
 <ul class="ticks">
@@ -1007,7 +1069,7 @@
 </div>
 
 <h3><span class="n">12.1</span>Notation</h3>
-<table class="tbl">
+<div class="tbl-wrap"><table class="tbl">
   <thead><tr><th style="width:22%">Module</th><th style="width:14%">État</th><th>Ce qui fonctionne</th><th style="width:24%">Ce qui manque</th></tr></thead>
   <tbody>
     <tr><td><strong>Tableau de bord</strong></td><td><span class="tag em">Complet</span></td><td>KPI, planning du jour, alertes, bascule démo/réel</td><td>Widgets personnalisables</td></tr>
@@ -1023,7 +1085,7 @@
     <tr><td><strong>Sécurité / rôles</strong></td><td><span class="tag ro">Partiel</span></td><td>Authentification Supabase, profil chargé</td><td>RLS, permissions, isolation tenant</td></tr>
     <tr><td><strong>Multi-entreprise</strong></td><td><span class="tag ro">Phase 2</span></td><td>—</td><td>Tenant, rôles fins, portail client</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">12.2</span>Dette technique</h3>
 <div class="grid2">
@@ -1057,7 +1119,7 @@
 </div>
 
 <h3><span class="n">13.1</span>Phase 1 — Fiabiliser (4 à 6 semaines)</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:34%">Livrable</th><th>Critère d'acceptation</th></tr></thead>
   <tbody>
     <tr><td>Politiques RLS sur les 7 tables</td><td>Un utilisateur A ne peut lire aucune ligne de l'entreprise B ; test automatisé fourni.</td></tr>
@@ -1066,7 +1128,7 @@
     <tr><td>Détection de conflit</td><td>Une prestation qui chevauche une autre pour la même équipe ou le même véhicule déclenche un avertissement.</td></tr>
     <tr><td>Montants de facture figés</td><td>Modifier le taux de TVA ne change plus une facture déjà émise.</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">13.2</span>Phase 2 — Enrichir (2 à 3 mois)</h3>
 <ul class="ticks">
@@ -1095,14 +1157,14 @@
 </div>
 
 <h3><span class="n">14.1</span>Environnements</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:22%">Environnement</th><th style="width:30%">Hébergement</th><th>Usage</th></tr></thead>
   <tbody>
     <tr><td>Production</td><td>Hostinger — site statique</td><td>Usage réel des utilisateurs</td></tr>
     <tr><td>Recette</td><td>Hostinger — sous-domaine ou répertoire dédié</td><td>Validation avant mise en production</td></tr>
     <tr><td>Base</td><td>Supabase — projet unique</td><td>Une base par environnement recommandée</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">14.2</span>Procédure de mise en production</h3>
 <ol style="font-size:9pt;line-height:1.7;padding-left:18px">
@@ -1134,7 +1196,7 @@
 </div>
 
 <h3><span class="n">15.1</span>Spécifications techniques</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <tbody>
     <tr><td style="width:30%"><strong>Format</strong></td><td>MP4 H.264, 1920 × 1080, 30 images/seconde</td></tr>
     <tr><td><strong>Durée cible</strong></td><td>2 min 45 à 3 min 15</td></tr>
@@ -1142,10 +1204,10 @@
     <tr><td><strong>Audio</strong></td><td>Voix off française, musique instrumentale discrète, sous-titres français</td></tr>
     <tr><td><strong>Données</strong></td><td>Utiliser le Mode Démo ou un jeu de démonstration cohérent, jamais de données client réelles</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">15.2</span>Storyboard</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:8%">Plan</th><th style="width:20%">Écran</th><th>Action filmée</th><th style="width:26%">Message</th></tr></thead>
   <tbody>
     <tr><td>01</td><td>Dashboard</td><td>Survol des quatre indicateurs, puis du planning du jour</td><td>« Voilà votre journée, en un écran. »</td></tr>
@@ -1160,7 +1222,7 @@
     <tr><td>10</td><td>Mobile</td><td>Dashboard sur téléphone, menu replié</td><td>« L'essentiel reste lisible sur le terrain. »</td></tr>
     <tr><td>11</td><td>Carton final</td><td>Logo DSL et accroche</td><td>« Du premier appel à la facture. »</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">15.3</span>Script voix off (extrait)</h3>
 <div class="code">« Une entreprise de déménagement, c'est des clients, des équipes,
@@ -1183,7 +1245,7 @@ elle est déjà là. »</div>
 </div>
 
 <h3><span class="n">16.1</span>Dépendances principales</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:34%">Paquet</th><th>Usage</th></tr></thead>
   <tbody>
     <tr><td class="mono">react / react-dom</td><td>Interface</td></tr>
@@ -1200,10 +1262,10 @@ elle est déjà là. »</div>
     <tr><td class="mono">framer-motion</td><td>Animations d'interface</td></tr>
     <tr><td class="mono">lucide-react</td><td>Icônes</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">16.2</span>Inventaire des captures</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <thead><tr><th style="width:34%">Fichier</th><th>Écran</th></tr></thead>
   <tbody>
     <tr><td class="mono">01-dashboard.jpg</td><td>Tableau de bord</td></tr>
@@ -1220,10 +1282,10 @@ elle est déjà là. »</div>
     <tr><td class="mono">12-login.jpg</td><td>Connexion</td></tr>
     <tr><td class="mono">13-mobile-dashboard.jpg</td><td>Vue mobile</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">16.3</span>Glossaire</h3>
-<table class="tbl compact">
+<div class="tbl-wrap"><table class="tbl compact">
   <tbody>
     <tr><td style="width:26%"><strong>Prestation</strong></td><td>Intervention planifiée chez un client : déménagement, transfert, garde-meuble ou location de monte-meuble.</td></tr>
     <tr><td><strong>Garde-meuble</strong></td><td>Service de stockage du mobilier du client dans un box, sur une durée contractuelle.</td></tr>
@@ -1234,7 +1296,7 @@ elle est déjà là. »</div>
     <tr><td><strong>TTC</strong></td><td>Montant toutes taxes comprises, calculé à partir du HT et du taux de TVA.</td></tr>
     <tr><td><strong>RLS</strong></td><td>Row Level Security : politiques PostgreSQL qui filtrent les lignes visibles par utilisateur.</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h3><span class="n">16.4</span>Captures de l'application</h3>
 <p class="small">Les treize captures ci-dessous proviennent de la version déployée, alimentée par un jeu de démonstration cohérent. Elles illustrent l'état réel de l'interface, sans retouche.</p>
